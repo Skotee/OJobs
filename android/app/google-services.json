@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "698382436615",
+    "firebase_url": "https://ojobs-272913.firebaseio.com",
+    "project_id": "ojobs-272913",
+    "storage_bucket": "ojobs-272913.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:698382436615:android:eb48cc6a0741becee49da2",
+        "android_client_info": {
+          "package_name": "com.oulu.o_jobs"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "698382436615-i29gukaeonlbsl0hcrvc8mm4boa24356.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyByrbVLH5o9typTIBII9xnd8Fa3BToLh-I"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "698382436615-i29gukaeonlbsl0hcrvc8mm4boa24356.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
