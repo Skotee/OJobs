@@ -1,7 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import './register_page.dart';
-import './signin_page.dart';
 import 'package:o_jobs/db.dart';
 
 
@@ -101,7 +100,7 @@ class _LoginPageState extends State<LoginPage> {
               border:
                   OutlineInputBorder(borderRadius: BorderRadius.circular(32.0))),
         );
-        final loginButon = Material(
+        final loginButton = Material(
           elevation: 5.0,
           borderRadius: BorderRadius.circular(30.0),
           color: Theme.of(context).buttonColor,
@@ -139,7 +138,7 @@ class _LoginPageState extends State<LoginPage> {
                     SizedBox(
                       height: 35.0,
                     ),
-                    loginButon,
+                    loginButton,
                     SizedBox(
                       height: 15.0,
                     ),
@@ -203,26 +202,20 @@ class _LoginPageState extends State<LoginPage> {
           _success = false;
         }
       }
-    }
+   
+    void _pushPage(BuildContext context, Widget page) {
+    Navigator.of(context).push(
+      MaterialPageRoute<void>(builder: (_) => page),
+    );
+  }
+}
   
   
   
   
+
   
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  /* 
+  /*
   @override
   Widget build(BuildContext context){
     // This method is rerun every time setState is called, for instance as done
@@ -259,10 +252,6 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  void _pushPage(BuildContext context, Widget page) {
-    Navigator.of(context).push(
-      MaterialPageRoute<void>(builder: (_) => page),
-    );
-  }
+
 }
  */
