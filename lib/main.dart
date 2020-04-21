@@ -2,6 +2,10 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import './register_page.dart';
 import './signin_page.dart';
+import 'package:o_jobs/db.dart';
+
+
+final FirebaseAuth _auth = FirebaseAuth.instance;
 
 void main() => runApp(MyApp());
 
@@ -24,13 +28,13 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
         brightness: Brightness.dark,
       ),
-      home: MyHomePage(title: 'OJobs'),
+      home: LoginPage(title: 'OJobs'),
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  MyHomePage({Key key, this.title}) : super(key: key);
+class LoginPage extends StatefulWidget {
+  LoginPage({Key key, this.title}) : super(key: key);
 
   // This widget is the home page of your application. It is stateful, meaning
   // that it has a State object (defined below) that contains fields that affect
@@ -44,28 +48,36 @@ class MyHomePage extends StatefulWidget {
   final String title;
 
   @override
-  _MyHomePageState createState() => _MyHomePageState();
+  _LoginPageState createState() => _LoginPageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class _LoginPageState extends State<LoginPage> {
   TextStyle style = TextStyle(fontFamily: 'Roboto', fontSize: 20.0);
   FirebaseUser user;
-  int _counter = 0;
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  Stream<User> userInfo;
+  bool _success;
+  String _userEmail;
 
   @override
       Widget build(BuildContext context) {
         final logoField = RichText(
           text: TextSpan(
-            text: 'OJobs',
-            children: <TextSpan>[
-              TextSpan(text: 'O'),
-              TextSpan(text: 'JOBS')
-            ]
+            text: 'OJobs'
           )
 
           
         );
-        final emailField = TextField(
+        final emailField = TextFormField(
+          controller: _emailController,
+          validator: (String value) {
+            if (value.isEmpty) {
+              return 'Please enter some text';
+            }
+            return null;
+          },
           style: style,
           decoration: InputDecoration(
               contentPadding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
@@ -73,7 +85,14 @@ class _MyHomePageState extends State<MyHomePage> {
               border:
                   OutlineInputBorder(borderRadius: BorderRadius.circular(32.0))),
         );
-        final passwordField = TextField(
+        final passwordField = TextFormField(
+          controller: _passwordController,
+          validator: (String value) {
+            if (value.isEmpty) {
+              return 'Please enter some text';
+            }
+            return null;
+          },
           obscureText: true,
           style: style,
           decoration: InputDecoration(
@@ -85,11 +104,15 @@ class _MyHomePageState extends State<MyHomePage> {
         final loginButon = Material(
           elevation: 5.0,
           borderRadius: BorderRadius.circular(30.0),
-          color: Color(0xff01A0C7),
+          color: Theme.of(context).buttonColor,
           child: MaterialButton(
             minWidth: MediaQuery.of(context).size.width,
             padding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
-            onPressed: () {},
+            onPressed: () async {
+                if (_formKey.currentState.validate()) {
+                  _signInWithEmailAndPassword();
+                }
+              },
             child: Text("Login",
                 textAlign: TextAlign.center,
                 style: style.copyWith(
@@ -98,9 +121,9 @@ class _MyHomePageState extends State<MyHomePage> {
         );
 
         return Scaffold(
-          body: Center(
+          body: Form(
+            key: _formKey,
             child: Container(
-              color: Colors.white,
               child: Padding(
                 padding: const EdgeInsets.all(36.0),
                 child: Column(
@@ -120,12 +143,64 @@ class _MyHomePageState extends State<MyHomePage> {
                     SizedBox(
                       height: 15.0,
                     ),
+                    Container(
+                      alignment: Alignment.center,
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      child: Text(
+                        _success == null
+                            ? ''
+                            : (_success
+                                ? 'Successfully signed in ' + _userEmail
+                                : 'Sign in failed'),
+                        style: TextStyle(color: Colors.red),
+                      ),
+                    ),
                   ],
                 ),
               ),
             ),
           ),
         );
+      }
+      @override
+      void dispose() {
+        _emailController.dispose();
+        _passwordController.dispose();
+        super.dispose();
+      }
+
+      void _signInWithEmailAndPassword() async {
+        user = (await _auth.signInWithEmailAndPassword(
+          email: _emailController.text,
+          password: _passwordController.text,
+        ))
+            .user;
+        if (user != null) {
+          setState(() {
+            _success = true;
+            userInfo = getUser(user.uid);
+            _userEmail = user.email;
+          });
+
+          //TODO: delete after implementations
+          Future<List<Job>> jobs;
+          Future<List<Job>> jobList;
+          jobs = queryJob(terms: ['android']);
+          jobs.then((onValue) => 
+            onValue.forEach((f) => print(f.name)));
+          userInfo.listen((data) {
+            print(data.favorite);
+            jobList = getJobList(data.favorite);
+            
+            jobList.then((onValue) => 
+              onValue.forEach((f) => print(f.position.latitude)));
+            
+          });
+
+          //end TODO
+        } else {
+          _success = false;
+        }
       }
     }
   
