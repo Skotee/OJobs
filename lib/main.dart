@@ -143,6 +143,7 @@ class _LoginPageState extends State<LoginPage> {
                     SizedBox(
                       height: 15.0,
                     ),
+                    //TODO: delete container after implementation of main page
                     Container(
                       alignment: Alignment.center,
                       padding: const EdgeInsets.symmetric(horizontal: 16),
