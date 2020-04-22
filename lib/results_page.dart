@@ -26,6 +26,22 @@ class _ResultsPageState extends State<ResultsPage> {
 
   @override
       Widget build(BuildContext context) {
+          final goToMapButton = Material(
+          elevation: 5.0,
+          borderRadius: BorderRadius.circular(30.0),
+          color: Theme.of(context).buttonColor,
+          child: MaterialButton(
+            minWidth: MediaQuery.of(context).size.width,
+            padding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
+            onPressed: () => _pushPage(context, MapPage()),
+            child: Text("Go to map",
+                textAlign: TextAlign.center,
+                style: style.copyWith(
+                color: Colors.white, fontWeight: FontWeight.bold)),
+          ),
+        );
+
+        //I need to include somewhere goToMapButton button
         return Scaffold(
           body: _buildBody(context),
         );
@@ -59,23 +75,24 @@ class _ResultsPageState extends State<ResultsPage> {
           ),
         );
       }
+
 }
       class Record {
-      final String title;
-      final String description;
-      final DocumentReference reference;
+        final String title;
+        final String description;
+        final DocumentReference reference;
 
-      Record.fromMap(Map<String, dynamic> map, {this.reference})
-          : assert(map['title'] != null),
-            assert(map['description'] != null),
-            title = map['title'],
-            description = map['description'];
+        Record.fromMap(Map<String, dynamic> map, {this.reference})
+            : assert(map['title'] != null),
+              assert(map['description'] != null),
+              title = map['title'],
+              description = map['description'];
 
-      Record.fromSnapshot(DocumentSnapshot snapshot)
-          : this.fromMap(snapshot.data, reference: snapshot.reference);
+        Record.fromSnapshot(DocumentSnapshot snapshot)
+            : this.fromMap(snapshot.data, reference: snapshot.reference);
 
-      @override
-      String toString() => "Record<$title:$description>";
+        @override
+        String toString() => "Record<$title:$description>";
       }
 
     void _pushPage(BuildContext context, Widget page) {
