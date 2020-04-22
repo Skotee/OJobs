@@ -4,6 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:o_jobs/db.dart';
 import './map_page.dart';
 final FirebaseAuth _auth = FirebaseAuth.instance;
+final dummySnapshot = [
+  {"title": "iOS Dev", "description": "15hehehehe"},
+  {"title": "Android Dev", "description": "14hehehe"},
+  {"title": "Web Dev", "description": "11heheheh"},
+];
 
 class ResultsPage extends StatefulWidget {
   ResultsPage({Key key, this.title}) : super(key: key);
@@ -21,91 +26,56 @@ class _ResultsPageState extends State<ResultsPage> {
 
   @override
       Widget build(BuildContext context) {
-        final logoField = RichText(
-          text: TextSpan(
-            children: <TextSpan>[
-            TextSpan(text: 'O', style: TextStyle(fontSize: 100, fontWeight: FontWeight.w100)),
-            TextSpan(text: 'JOBS', style: TextStyle(fontSize: 20)),
-          ]
-          )
-        );
-        final listField = ListView(
-        children: const <Widget>[
-          Card(
-            child: ListTile(
-              leading: Icon(Icons.account_circle),
-              title: Text('iOS Dev'),
-              subtitle: Text(
-                'A sufficiently long subtitle warrants three lines.'
-              ),
-              trailing: Icon(Icons.favorite_border),
-              isThreeLine: true,
-            ),
-          ),
-          Card(
-            child: ListTile(
-              leading: Icon(Icons.account_circle),
-              title: Text('Android Dev'),
-              subtitle: Text(
-                'A sufficiently long subtitle warrants three lines.'
-              ),
-              trailing: Icon(Icons.favorite_border),
-              isThreeLine: true,
-            ),
-          ),
-          Card(
-            child: ListTile(
-              leading: Icon(Icons.account_circle),
-              title: Text('Web Dev'),
-              subtitle: Text(
-                'A sufficiently long subtitle warrants three lines.'
-              ),
-              trailing: Icon(Icons.favorite_border),
-              isThreeLine: true,
-            ),
-          ),
-        ],
-      );
-        final goToMapButton = Material(
-          elevation: 5.0,
-          borderRadius: BorderRadius.circular(30.0),
-          color: Theme.of(context).buttonColor,
-          child: MaterialButton(
-            minWidth: MediaQuery.of(context).size.width,
-            padding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
-            // onPressed: () => _pushPage(context, MapPage()),
-            child: Text("Go to map",
-                textAlign: TextAlign.center,
-                style: style.copyWith(
-                color: Colors.white, fontWeight: FontWeight.bold)),
-          ),
-        );
         return Scaffold(
-          body: Form(
-            key: _formKey,
-            child: Container(
-              child: Padding(
-                padding: const EdgeInsets.all(36.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    SizedBox(height: 15.0),
-                    logoField,
-                    SizedBox(height: 20.0),
-                    listField,
-                    SizedBox(height: 20.0),
-                    goToMapButton
-                  ],
-                ),
-              ),
+          body: _buildBody(context),
+        );
+      }
+       Widget _buildBody(BuildContext context) {
+        // TODO: get actual snapshot from Cloud Firestore
+        return _buildList(context, dummySnapshot);
+      }
+       Widget _buildList(BuildContext context, List<Map> snapshot) {
+        return ListView(
+          padding: const EdgeInsets.only(top: 20.0),
+          children: snapshot.map((data) => _buildListItem(context, data)).toList(),
+        );
+      }
+       Widget _buildListItem(BuildContext context, Map data) {
+        final record = Record.fromMap(data);
+
+        return Padding(
+          key: ValueKey(record.title),
+          padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+          child: Container(
+            decoration: BoxDecoration(
+              border: Border.all(color: Colors.grey),
+              borderRadius: BorderRadius.circular(5.0),
+            ),
+            child: ListTile(
+              title: Text(record.title),
+              trailing: Text(record.description),
+              onTap: () => print(record),
             ),
           ),
         );
       }
+}
+      class Record {
+      final String title;
+      final String description;
+      final DocumentReference reference;
+
+      Record.fromMap(Map<String, dynamic> map, {this.reference})
+          : assert(map['title'] != null),
+            assert(map['description'] != null),
+            title = map['title'],
+            description = map['description'];
+
+      Record.fromSnapshot(DocumentSnapshot snapshot)
+          : this.fromMap(snapshot.data, reference: snapshot.reference);
+
       @override
-      void dispose() {
-        super.dispose();
+      String toString() => "Record<$title:$description>";
       }
 
     void _pushPage(BuildContext context, Widget page) {
@@ -113,4 +83,3 @@ class _ResultsPageState extends State<ResultsPage> {
       MaterialPageRoute<void>(builder: (_) => page),
     );
   }
-}
