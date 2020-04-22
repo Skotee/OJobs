@@ -1,35 +1,10 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:o_jobs/db.dart';
 import './main.dart';
 
 final FirebaseAuth _auth = FirebaseAuth.instance;
-
-void main() => runApp(MyApp());
-
-class MyApp extends StatelessWidget {
-  // This widget is the root of your application.
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'OJobs',
-      theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // Try running your application with "flutter run". You'll see the
-        // application has a blue toolbar. Then, without quitting the app, try
-        // changing the primarySwatch below to Colors.green and then invoke
-        // "hot reload" (press "r" in the console where you ran "flutter run",
-        // or simply save your changes to "hot reload" in a Flutter IDE).
-        // Notice that the counter didn't reset back to zero; the application
-        // is not restarted.
-        primarySwatch: Colors.blue,
-        brightness: Brightness.dark,
-      ),
-      home: RegisterPage(title: 'OJobs'),
-    );
-  }
-}
 
 class RegisterPage extends StatefulWidget {
   RegisterPage({Key key, this.title}) : super(key: key);
@@ -55,6 +30,11 @@ class _RegisterPageState extends State<RegisterPage> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _nameController = TextEditingController();
+  final TextEditingController _lastnameController = TextEditingController();
+  final TextEditingController _mobileController = TextEditingController();
+  final TextEditingController _addressController = TextEditingController();
+  final TextEditingController _countryController = TextEditingController();
   Stream<User> userInfo;
   bool _success;
   String _userEmail;
@@ -70,10 +50,10 @@ class _RegisterPageState extends State<RegisterPage> {
           )
         );
         final nameField = TextFormField(
-          // controller: _nameController,
+          controller: _nameController,
           validator: (String value) {
             if (value.isEmpty) {
-              return 'Please enter some text';
+              return 'Please enter your name';
             }
             return null;
           },
@@ -84,18 +64,18 @@ class _RegisterPageState extends State<RegisterPage> {
               border:
                   OutlineInputBorder(borderRadius: BorderRadius.circular(32.0))),
         );
-         final surnameField = TextFormField(
-          // controller: _surnameController,
+        final lastnameField = TextFormField(
+          controller: _lastnameController,
           validator: (String value) {
             if (value.isEmpty) {
-              return 'Please enter some text';
+              return 'Please enter your last name';
             }
             return null;
           },
           style: style,
           decoration: InputDecoration(
               contentPadding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
-              hintText: "Surname",
+              hintText: "Lastname",
               border:
                   OutlineInputBorder(borderRadius: BorderRadius.circular(32.0))),
         );
@@ -103,7 +83,7 @@ class _RegisterPageState extends State<RegisterPage> {
           controller: _emailController,
           validator: (String value) {
             if (value.isEmpty) {
-              return 'Please enter some text';
+              return 'Please enter your mail';
             }
             return null;
           },
@@ -115,10 +95,10 @@ class _RegisterPageState extends State<RegisterPage> {
                   OutlineInputBorder(borderRadius: BorderRadius.circular(32.0))),
         );
         final mobileField = TextFormField(
-          // controller: _mobileController,
+          controller: _mobileController,
           validator: (String value) {
             if (value.isEmpty) {
-              return 'Please enter some text';
+              return 'Please enter your mobile';
             }
             return null;
           },
@@ -130,10 +110,10 @@ class _RegisterPageState extends State<RegisterPage> {
                   OutlineInputBorder(borderRadius: BorderRadius.circular(32.0))),
         );
         final addressField = TextFormField(
-          // controller: _addressController,
+          controller: _addressController,
           validator: (String value) {
             if (value.isEmpty) {
-              return 'Please enter some text';
+              return 'Please enter your address';
             }
             return null;
           },
@@ -145,10 +125,10 @@ class _RegisterPageState extends State<RegisterPage> {
                   OutlineInputBorder(borderRadius: BorderRadius.circular(32.0))),
         );
         final countryField = TextFormField(
-          // controller: _countryController,
+          controller: _countryController,
           validator: (String value) {
             if (value.isEmpty) {
-              return 'Please enter some text';
+              return 'Please enter your country';
             }
             return null;
           },
@@ -163,8 +143,10 @@ class _RegisterPageState extends State<RegisterPage> {
           controller: _passwordController,
           validator: (String value) {
             if (value.isEmpty) {
-              return 'Please enter some text';
+              return 'Please enter a valid password';
             }
+            else if(value.length < 6)
+              return 'Please enter a valid password';
             return null;
           },
           obscureText: true,
@@ -184,7 +166,8 @@ class _RegisterPageState extends State<RegisterPage> {
             padding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
             onPressed: () async {
                 if (_formKey.currentState.validate()) {
-                  // _signInWithEmailAndPassword();
+                  _register();
+
                 }
               },
             child: Text("Register",
@@ -225,7 +208,7 @@ class _RegisterPageState extends State<RegisterPage> {
                     SizedBox(height: 8.0),
                     nameField,
                     SizedBox(height: 8.0),
-                    surnameField,
+                    lastnameField,
                     SizedBox(height: 8.0),
                     emailField,
                     SizedBox(height: 8.0),
@@ -241,19 +224,6 @@ class _RegisterPageState extends State<RegisterPage> {
                     SizedBox(height: 8.0),
                     SizedBox(height: 8.0),
                     goToLoginPageButton,
-                    //TODO: delete container after implementation of main page
-                    Container(
-                      alignment: Alignment.center,
-                      padding: const EdgeInsets.symmetric(horizontal: 16),
-                      child: Text(
-                        _success == null
-                            ? ''
-                            : (_success
-                                ? 'Successfully signed in ' + _userEmail
-                                : 'Sign in failed'),
-                        style: TextStyle(color: Colors.red),
-                      ),
-                    ),
                   ],
                 ),
               ),
@@ -265,53 +235,50 @@ class _RegisterPageState extends State<RegisterPage> {
       void dispose() {
         _emailController.dispose();
         _passwordController.dispose();
+        _addressController.dispose();
+        _countryController.dispose();
+        _lastnameController.dispose();
+        _mobileController.dispose();
+        _nameController.dispose();
         super.dispose();
       }
+
+
+      
 
     void _pushPage(BuildContext context, Widget page) {
     Navigator.of(context).push(
       MaterialPageRoute<void>(builder: (_) => page),
     );
   }
-}
-
-  /*
-  @override
-  Widget build(BuildContext context){
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-      ),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          Container(
-            child: RaisedButton(
-              child: const Text('Test registration'),
-              onPressed: () => _pushPage(context, RegisterPage()),
-            ),
-            padding: const EdgeInsets.all(16),
-            alignment: Alignment.center,
-          ),
-          Container(
-            child: RaisedButton(
-              child: const Text('Test SignIn/SignOut'),
-              onPressed: () => _pushPage(context, SignInPage()),
-            ),
-            padding: const EdgeInsets.all(16),
-            alignment: Alignment.center,
-          ),
-        ],
-      ),
-    );
+  void _register() async {
+    final FirebaseUser user = (await _auth.createUserWithEmailAndPassword(
+      email: _emailController.text,
+      password: _passwordController.text,
+    ))
+        .user;
+    if (user != null) {
+      setState(() {
+        _success = true;
+        _userEmail = user.email;
+      });
+      Firestore.instance.collection('USER').document(user.uid).setData({
+          'name': _nameController.text,
+          'lastname': _lastnameController.text,
+          'email': _emailController.text,
+          'mobile': _mobileController.text,
+          'adress': _addressController.text,
+          'country': _countryController.text,
+          'createdAt': DateTime.now(),
+          'picUrl': null,
+          'CV1': null,
+          'CV2': null,
+          'favorite': null,
+          'applied': null
+        });
+        _pushPage(context, LoginPage());
+    } else {
+      _success = false;
+    }
   }
-
-
 }
- */
