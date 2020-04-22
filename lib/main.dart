@@ -64,10 +64,11 @@ class _LoginPageState extends State<LoginPage> {
       Widget build(BuildContext context) {
         final logoField = RichText(
           text: TextSpan(
-            text: 'OJobs'
+            children: <TextSpan>[
+            TextSpan(text: 'O', style: TextStyle(fontSize: 100, fontWeight: FontWeight.w100)),
+            TextSpan(text: 'JOBS', style: TextStyle(fontSize: 20)),
+          ]
           )
-
-          
         );
         final emailField = TextFormField(
           controller: _emailController,
@@ -118,7 +119,20 @@ class _LoginPageState extends State<LoginPage> {
                     color: Colors.white, fontWeight: FontWeight.bold)),
           ),
         );
-
+        final goToRegisterPageButton = Material(
+          elevation: 5.0,
+          borderRadius: BorderRadius.circular(30.0),
+          color: Theme.of(context).buttonColor,
+          child: MaterialButton(
+            minWidth: MediaQuery.of(context).size.width,
+            padding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
+            onPressed: () => _pushPage(context, RegisterPage()),
+            child: Text("Register",
+                textAlign: TextAlign.center,
+                style: style.copyWith(
+                    color: Colors.white, fontWeight: FontWeight.bold)),
+          ),
+        );
         return Scaffold(
           body: Form(
             key: _formKey,
@@ -135,13 +149,10 @@ class _LoginPageState extends State<LoginPage> {
                     emailField,
                     SizedBox(height: 25.0),
                     passwordField,
-                    SizedBox(
-                      height: 35.0,
-                    ),
+                    SizedBox(height: 35.0),
                     loginButton,
-                    SizedBox(
-                      height: 15.0,
-                    ),
+                    SizedBox(height: 15.0), 
+                    goToRegisterPageButton,
                     //TODO: delete container after implementation of main page
                     Container(
                       alignment: Alignment.center,

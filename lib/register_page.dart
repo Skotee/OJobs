@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:o_jobs/db.dart';
+import './main.dart';
 
 final FirebaseAuth _auth = FirebaseAuth.instance;
 
@@ -62,10 +63,41 @@ class _RegisterPageState extends State<RegisterPage> {
       Widget build(BuildContext context) {
         final logoField = RichText(
           text: TextSpan(
-            text: 'OJobs'
+            children: <TextSpan>[
+            TextSpan(text: 'O', style: TextStyle(fontSize: 100, fontWeight: FontWeight.w100)),
+            TextSpan(text: 'JOBS', style: TextStyle(fontSize: 20)),
+          ]
           )
-
-          
+        );
+        final nameField = TextFormField(
+          // controller: _nameController,
+          validator: (String value) {
+            if (value.isEmpty) {
+              return 'Please enter some text';
+            }
+            return null;
+          },
+          style: style,
+          decoration: InputDecoration(
+              contentPadding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
+              hintText: "Name",
+              border:
+                  OutlineInputBorder(borderRadius: BorderRadius.circular(32.0))),
+        );
+         final surnameField = TextFormField(
+          // controller: _surnameController,
+          validator: (String value) {
+            if (value.isEmpty) {
+              return 'Please enter some text';
+            }
+            return null;
+          },
+          style: style,
+          decoration: InputDecoration(
+              contentPadding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
+              hintText: "Surname",
+              border:
+                  OutlineInputBorder(borderRadius: BorderRadius.circular(32.0))),
         );
         final emailField = TextFormField(
           controller: _emailController,
@@ -79,6 +111,51 @@ class _RegisterPageState extends State<RegisterPage> {
           decoration: InputDecoration(
               contentPadding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
               hintText: "Email",
+              border:
+                  OutlineInputBorder(borderRadius: BorderRadius.circular(32.0))),
+        );
+        final mobileField = TextFormField(
+          // controller: _mobileController,
+          validator: (String value) {
+            if (value.isEmpty) {
+              return 'Please enter some text';
+            }
+            return null;
+          },
+          style: style,
+          decoration: InputDecoration(
+              contentPadding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
+              hintText: "Mobile",
+              border:
+                  OutlineInputBorder(borderRadius: BorderRadius.circular(32.0))),
+        );
+        final addressField = TextFormField(
+          // controller: _addressController,
+          validator: (String value) {
+            if (value.isEmpty) {
+              return 'Please enter some text';
+            }
+            return null;
+          },
+          style: style,
+          decoration: InputDecoration(
+              contentPadding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
+              hintText: "Address",
+              border:
+                  OutlineInputBorder(borderRadius: BorderRadius.circular(32.0))),
+        );
+        final countryField = TextFormField(
+          // controller: _countryController,
+          validator: (String value) {
+            if (value.isEmpty) {
+              return 'Please enter some text';
+            }
+            return null;
+          },
+          style: style,
+          decoration: InputDecoration(
+              contentPadding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
+              hintText: "Country",
               border:
                   OutlineInputBorder(borderRadius: BorderRadius.circular(32.0))),
         );
@@ -107,7 +184,7 @@ class _RegisterPageState extends State<RegisterPage> {
             padding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
             onPressed: () async {
                 if (_formKey.currentState.validate()) {
-                  _signInWithEmailAndPassword();
+                  // _signInWithEmailAndPassword();
                 }
               },
             child: Text("Register",
@@ -116,6 +193,22 @@ class _RegisterPageState extends State<RegisterPage> {
                     color: Colors.white, fontWeight: FontWeight.bold)),
           ),
         );
+
+        final goToLoginPageButton = Material(
+          elevation: 5.0,
+          borderRadius: BorderRadius.circular(30.0),
+          color: Theme.of(context).buttonColor,
+          child: MaterialButton(
+            minWidth: MediaQuery.of(context).size.width,
+            padding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
+            onPressed: () => _pushPage(context, LoginPage()),
+            child: Text("Login",
+                textAlign: TextAlign.center,
+                style: style.copyWith(
+                    color: Colors.white, fontWeight: FontWeight.bold)),
+          ),
+        );
+
 
         return Scaffold(
           body: Form(
@@ -127,19 +220,27 @@ class _RegisterPageState extends State<RegisterPage> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
-                    SizedBox(height: 155.0),
+                    SizedBox(height: 5.0),
                     logoField,
-                    SizedBox(height: 45.0),
+                    SizedBox(height: 8.0),
+                    nameField,
+                    SizedBox(height: 8.0),
+                    surnameField,
+                    SizedBox(height: 8.0),
                     emailField,
-                    SizedBox(height: 25.0),
+                    SizedBox(height: 8.0),
+                    mobileField,
+                    SizedBox(height: 8.0),
+                    addressField,
+                    SizedBox(height: 8.0),
+                    countryField,
+                    SizedBox(height: 8.0),
                     passwordField,
-                    SizedBox(
-                      height: 35.0,
-                    ),
+                    SizedBox(height: 8.0),
                     registerButton,
-                    SizedBox(
-                      height: 15.0,
-                    ),
+                    SizedBox(height: 8.0),
+                    SizedBox(height: 8.0),
+                    goToLoginPageButton,
                     //TODO: delete container after implementation of main page
                     Container(
                       alignment: Alignment.center,
@@ -167,52 +268,13 @@ class _RegisterPageState extends State<RegisterPage> {
         super.dispose();
       }
 
-      void _signInWithEmailAndPassword() async {
-        user = (await _auth.signInWithEmailAndPassword(
-          email: _emailController.text,
-          password: _passwordController.text,
-        ))
-            .user;
-        if (user != null) {
-          setState(() {
-            _success = true;
-            userInfo = getUser(user.uid);
-            _userEmail = user.email;
-          });
-
-          //TODO: delete after implementations
-          Future<List<Job>> jobs;
-          Future<List<Job>> jobList;
-          jobs = queryJob(terms: ['android']);
-          jobs.then((onValue) => 
-            onValue.forEach((f) => print(f.name)));
-          userInfo.listen((data) {
-            print(data.favorite);
-            jobList = getJobList(data.favorite);
-            
-            jobList.then((onValue) => 
-              onValue.forEach((f) => print(f.position.latitude)));
-            
-          });
-
-          //end TODO
-        } else {
-          _success = false;
-        }
-      }
-   
     void _pushPage(BuildContext context, Widget page) {
     Navigator.of(context).push(
       MaterialPageRoute<void>(builder: (_) => page),
     );
   }
 }
-  
-  
-  
-  
 
-  
   /*
   @override
   Widget build(BuildContext context){
