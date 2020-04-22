@@ -6,8 +6,8 @@ import './main.dart';
 
 final FirebaseAuth _auth = FirebaseAuth.instance;
 
-class RegisterPage extends StatefulWidget {
-  RegisterPage({Key key, this.title}) : super(key: key);
+class SearchPage extends StatefulWidget {
+  SearchPage({Key key, this.title}) : super(key: key);
 
   // This widget is the home page of your application. It is stateful, meaning
   // that it has a State object (defined below) that contains fields that affect
@@ -21,10 +21,10 @@ class RegisterPage extends StatefulWidget {
   final String title;
 
   @override
-  _RegisterPageState createState() => _RegisterPageState();
+  _SearchPageState createState() => _SearchPageState();
 }
 
-class _RegisterPageState extends State<RegisterPage> {
+class _SearchPageState extends State<SearchPage> {
   TextStyle style = TextStyle(fontFamily: 'Roboto', fontSize: 20.0);
   FirebaseUser user;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
