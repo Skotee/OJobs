@@ -2,7 +2,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:o_jobs/db.dart';
-import './main.dart';
+
+import 'package:geolocator/geolocator.dart';
 
 final FirebaseAuth _auth = FirebaseAuth.instance;
 
@@ -135,12 +136,8 @@ class _SearchPageState extends State<SearchPage> {
         _wherejobController.dispose();
         super.dispose();
       }
-
-    void _pushPage(BuildContext context, Widget page) {
-    Navigator.of(context).push(
-      MaterialPageRoute<void>(builder: (_) => page),
-    );
-  }
   void _search() async {
+    List<Placemark> placemark = await Geolocator().placemarkFromAddress(_wherejobController.text);
+    queryGeoKeyJob(_whatjobController.text,placemark[0].position.latitude,placemark[0].position.longitude);
   }
 }

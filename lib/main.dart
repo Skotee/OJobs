@@ -1,7 +1,10 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import './register_page.dart';
-import 'package:o_jobs/db.dart';
+import 'results_page.dart';
+import 'register_page.dart';
+import 'searchjob_page.dart';
+import 'db.dart';
+import 'map_page.dart';
 
 
 final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -27,7 +30,14 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
         brightness: Brightness.dark,
       ),
-      home: LoginPage(title: 'OJobs'),
+      initialRoute: '/login',
+      routes: {
+        '/login': (context) => LoginPage(title: 'OJobs'),
+        '/register': (context) => RegisterPage(),
+        '/search': (context) => SearchPage(),
+        '/result': (context) => ResultsPage(),
+        '/map': (context) => MapPage(),
+      },
     );
   }
 }
@@ -126,7 +136,7 @@ class _LoginPageState extends State<LoginPage> {
           child: MaterialButton(
             minWidth: MediaQuery.of(context).size.width,
             padding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
-            onPressed: () => _pushPage(context, RegisterPage()),
+            onPressed: () => Navigator.pushNamed(context, '/register'),
             child: Text("Register",
                 textAlign: TextAlign.center,
                 style: style.copyWith(
@@ -213,50 +223,4 @@ class _LoginPageState extends State<LoginPage> {
           _success = false;
         }
       }
-    void _pushPage(BuildContext context, Widget page) {
-    Navigator.of(context).push(
-      MaterialPageRoute<void>(builder: (_) => page),
-    );
-  }
 }
-
-  /*
-  @override
-  Widget build(BuildContext context){
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-      ),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          Container(
-            child: RaisedButton(
-              child: const Text('Test registration'),
-              onPressed: () => _pushPage(context, RegisterPage()),
-            ),
-            padding: const EdgeInsets.all(16),
-            alignment: Alignment.center,
-          ),
-          Container(
-            child: RaisedButton(
-              child: const Text('Test SignIn/SignOut'),
-              onPressed: () => _pushPage(context, SignInPage()),
-            ),
-            padding: const EdgeInsets.all(16),
-            alignment: Alignment.center,
-          ),
-        ],
-      ),
-    );
-  }
-
-
-}
- */

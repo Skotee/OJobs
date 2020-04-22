@@ -5,6 +5,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:location/location.dart';
+import 'package:geolocator/geolocator.dart';
 
 
 Stream<User> getUser(String id){
@@ -55,7 +56,6 @@ Future<List<Job>> getJobList(List<dynamic> id) async {
 
   return qShot.documents.map((doc) => Job.fromSnapshot(doc)).toList();
 }
-
 Stream<Job> getJob(String id){
   return Firestore.instance
   .collection('JOBS')
@@ -72,12 +72,14 @@ Stream<Job> getJob(String id){
 }
 
 class Job {
+  String id;
   String name;
   String desc;
   GeoPoint position;
   List<dynamic> skillList;
 
   Job.fromSnapshot(DocumentSnapshot snapshot):
+    id = snapshot.documentID,
     name = snapshot['name'],
     desc = snapshot['desc'],
     position = snapshot['position']['geopoint'],
@@ -152,6 +154,14 @@ Future<List<Job>> queryJob({List<String> terms, List<String> skills, GeoPoint co
   
 }
 
+Stream<List<Job>> queryGeoKeyJob(String name, double lat, double long) {
+  var terms = name.split(" ");
+  GeoFirePoint center = Geoflutterfire().point(latitude: lat, longitude: long);
+  var collectionReference = Firestore.instance.collection('JOBS').where('key_term',arrayContainsAny: terms);
+  var searchRef = Geoflutterfire().collection(collectionRef: collectionReference).within(
+          center: center, radius: 50, field: 'position', strictMode: true);
+  return searchRef.map((list) => list.map((doc) => Job.fromSnapshot(doc)).toList());
+}
 
 
 //TODO: UPDATE THE QUERY

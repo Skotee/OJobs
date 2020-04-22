@@ -184,7 +184,7 @@ class _RegisterPageState extends State<RegisterPage> {
           child: MaterialButton(
             minWidth: MediaQuery.of(context).size.width,
             padding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
-            onPressed: () => _pushPage(context, LoginPage()),
+            onPressed: () => Navigator.pushNamed(context, '/login'),
             child: Text("Login",
                 textAlign: TextAlign.center,
                 style: style.copyWith(
@@ -243,11 +243,6 @@ class _RegisterPageState extends State<RegisterPage> {
         super.dispose();
       }
 
-    void _pushPage(BuildContext context, Widget page) {
-    Navigator.of(context).push(
-      MaterialPageRoute<void>(builder: (_) => page),
-    );
-  }
   void _register() async {
     final FirebaseUser user = (await _auth.createUserWithEmailAndPassword(
       email: _emailController.text,

@@ -21,7 +21,6 @@ class ResultsPage extends StatefulWidget {
 class _ResultsPageState extends State<ResultsPage> {
   TextStyle style = TextStyle(fontFamily: 'Roboto', fontSize: 20.0);
   FirebaseUser user;
-  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   Stream<User> userInfo;
 
   @override
@@ -33,7 +32,7 @@ class _ResultsPageState extends State<ResultsPage> {
           child: MaterialButton(
             minWidth: MediaQuery.of(context).size.width,
             padding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
-            onPressed: () => _pushPage(context, MapPage()),
+            onPressed: () => Navigator.pushNamed(context, '/map'),
             child: Text("Go to map",
                 textAlign: TextAlign.center,
                 style: style.copyWith(
@@ -94,9 +93,3 @@ class _ResultsPageState extends State<ResultsPage> {
         @override
         String toString() => "Record<$title:$description>";
       }
-
-    void _pushPage(BuildContext context, Widget page) {
-    Navigator.of(context).push(
-      MaterialPageRoute<void>(builder: (_) => page),
-    );
-  }
