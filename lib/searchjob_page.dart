@@ -83,7 +83,6 @@ class _SearchPageState extends State<SearchPage> {
             onPressed: () async {
                 if (_formKey.currentState.validate()) {
                   _search();
-
                 }
               },
             child: Text("Search",
@@ -136,7 +135,6 @@ class _SearchPageState extends State<SearchPage> {
         _wherejobController.dispose();
         super.dispose();
       }
-
 
     void _pushPage(BuildContext context, Widget page) {
     Navigator.of(context).push(

@@ -243,9 +243,6 @@ class _RegisterPageState extends State<RegisterPage> {
         super.dispose();
       }
 
-
-      
-
     void _pushPage(BuildContext context, Widget page) {
     Navigator.of(context).push(
       MaterialPageRoute<void>(builder: (_) => page),

@@ -213,19 +213,13 @@ class _LoginPageState extends State<LoginPage> {
           _success = false;
         }
       }
-   
     void _pushPage(BuildContext context, Widget page) {
     Navigator.of(context).push(
       MaterialPageRoute<void>(builder: (_) => page),
     );
   }
 }
-  
-  
-  
-  
 
-  
   /*
   @override
   Widget build(BuildContext context){
