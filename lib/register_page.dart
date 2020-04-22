@@ -276,7 +276,7 @@ class _RegisterPageState extends State<RegisterPage> {
           'favorite': null,
           'applied': null
         });
-        _pushPage(context, LoginPage());
+        Navigator.pop(context);
     } else {
       _success = false;
     }
