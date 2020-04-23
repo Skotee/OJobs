@@ -3,16 +3,14 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:o_jobs/db.dart';
 import './map_page.dart';
+
 final FirebaseAuth _auth = FirebaseAuth.instance;
-final dummySnapshot = [
-  {"title": "iOS Dev", "description": "15hehehehe"},
-  {"title": "Android Dev", "description": "14hehehe"},
-  {"title": "Web Dev", "description": "11heheheh"},
-];
 
 class ResultsPage extends StatefulWidget {
-  ResultsPage({Key key, this.title}) : super(key: key);
-  final String title;
+  final double lat;
+  final double long;
+  final String term;
+  ResultsPage({Key key, @required this.term, @required this.lat,@required this.long}) : super(key: key);
 
   @override
   _ResultsPageState createState() => _ResultsPageState();
@@ -20,9 +18,7 @@ class ResultsPage extends StatefulWidget {
 
 class _ResultsPageState extends State<ResultsPage> {
   TextStyle style = TextStyle(fontFamily: 'Roboto', fontSize: 20.0);
-  FirebaseUser user;
   Stream<User> userInfo;
-
   @override
       Widget build(BuildContext context) {
           final goToMapButton = Material(
@@ -32,7 +28,12 @@ class _ResultsPageState extends State<ResultsPage> {
           child: MaterialButton(
             minWidth: MediaQuery.of(context).size.width,
             padding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
-            onPressed: () => Navigator.pushNamed(context, '/map'),
+            onPressed: () => Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => MapPage(term: widget.term,lat: widget.lat,long: widget.long),
+              ),
+            ),
             child: Text("Go to map",
                 textAlign: TextAlign.center,
                 style: style.copyWith(
@@ -40,26 +41,37 @@ class _ResultsPageState extends State<ResultsPage> {
           ),
         );
 
-        //I need to include somewhere goToMapButton button
         return Scaffold(
           body: _buildBody(context),
+          floatingActionButton: goToMapButton,
+          floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
         );
       }
        Widget _buildBody(BuildContext context) {
-        // TODO: get actual snapshot from Cloud Firestore
-        return _buildList(context, dummySnapshot);
+        return StreamBuilder<List<DocumentSnapshot>>(
+          stream: queryGeoKeyJob(widget.term,widget.lat,widget.long),
+          builder: (context, snapshot) {
+            print(snapshot.data);
+            if(!snapshot.hasData) {
+              return Center(
+                        child: CircularProgressIndicator(),
+                      );
+            }
+            return _buildList(context, snapshot.data);
+          },
+        );
       }
-       Widget _buildList(BuildContext context, List<Map> snapshot) {
+       Widget _buildList(BuildContext context, List<DocumentSnapshot> snapshot) {
         return ListView(
           padding: const EdgeInsets.only(top: 20.0),
           children: snapshot.map((data) => _buildListItem(context, data)).toList(),
         );
       }
-       Widget _buildListItem(BuildContext context, Map data) {
-        final record = Record.fromMap(data);
+       Widget _buildListItem(BuildContext context, DocumentSnapshot data) {
+        final job = Job.fromSnapshot(data);
 
         return Padding(
-          key: ValueKey(record.title),
+          key: ValueKey(job.name),
           padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
           child: Container(
             decoration: BoxDecoration(
@@ -67,29 +79,12 @@ class _ResultsPageState extends State<ResultsPage> {
               borderRadius: BorderRadius.circular(5.0),
             ),
             child: ListTile(
-              title: Text(record.title),
-              trailing: Text(record.description),
-              onTap: () => print(record),
+              title: Text(job.name),
+              trailing: Text(job.desc),
+              onTap: () => print(job.desc),
             ),
           ),
         );
       }
 
 }
-      class Record {
-        final String title;
-        final String description;
-        final DocumentReference reference;
-
-        Record.fromMap(Map<String, dynamic> map, {this.reference})
-            : assert(map['title'] != null),
-              assert(map['description'] != null),
-              title = map['title'],
-              description = map['description'];
-
-        Record.fromSnapshot(DocumentSnapshot snapshot)
-            : this.fromMap(snapshot.data, reference: snapshot.reference);
-
-        @override
-        String toString() => "Record<$title:$description>";
-      }

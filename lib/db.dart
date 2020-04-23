@@ -154,13 +154,15 @@ Future<List<Job>> queryJob({List<String> terms, List<String> skills, GeoPoint co
   
 }
 
-Stream<List<Job>> queryGeoKeyJob(String name, double lat, double long) {
+Stream<List<DocumentSnapshot>> queryGeoKeyJob(String name, double lat, double long) {
   var terms = name.split(" ");
   GeoFirePoint center = Geoflutterfire().point(latitude: lat, longitude: long);
-  var collectionReference = Firestore.instance.collection('JOBS').where('key_term',arrayContainsAny: terms);
+  var collectionReference = Firestore.instance.collection('JOBS');
+  //.where('key_term',arrayContainsAny: terms);
   var searchRef = Geoflutterfire().collection(collectionRef: collectionReference).within(
-          center: center, radius: 50, field: 'position', strictMode: true);
-  return searchRef.map((list) => list.map((doc) => Job.fromSnapshot(doc)).toList());
+          center: center, radius: 20, field: 'position');
+  return searchRef;
+  //return searchRef.map((list) => list.map((doc) => Job.fromSnapshot(doc)).toList());
 }
 
 

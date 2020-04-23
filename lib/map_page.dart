@@ -1,38 +1,75 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:geoflutterfire/geoflutterfire.dart';
+import 'package:o_jobs/db.dart';
+import 'package:geoflutterfire/src/point.dart';
+import 'package:rxdart/rxdart.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
-void main() => runApp(MapPage());
-
 class MapPage extends StatefulWidget {
+  final double lat;
+  final double long;
+  final String term;
+  MapPage({@required this.term, @required this.lat,@required this.long});
   @override
   _MapPageState createState() => _MapPageState();
 }
 
 class _MapPageState extends State<MapPage> {
+  final List<Marker> _markers = <Marker>[];
   GoogleMapController mapController;
+  Stream<List<DocumentSnapshot>> stream;
 
-  final LatLng _center = const LatLng(45.521563, -122.677433);
+@override
+  void initState() {
+    super.initState();
+    stream = queryGeoKeyJob(widget.term,widget.lat,widget.long);
+  }
 
   void _onMapCreated(GoogleMapController controller) {
-    mapController = controller;
+    setState(() {
+      _markers.clear();
+      mapController = controller;
+      //start listening after map is created
+      stream.listen((List<DocumentSnapshot> documentList) {
+        _updateMarkers(documentList);
+      });
+    });
+  }
+
+  void _updateMarkers(List<DocumentSnapshot> documentList) async {
+    setState(() {
+      _markers.clear();
+    });
+    documentList.forEach((DocumentSnapshot document) {
+      Job job = Job.fromSnapshot(document);
+      _markers.add(
+        Marker(
+          markerId: MarkerId(job.id),
+          position: LatLng(job.position.latitude,job.position.longitude),
+          icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueViolet),
+          onTap: () => print(job.id),
+        ),
+      );
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-        appBar: AppBar(
-          title: Text('OJobs'),
-          backgroundColor: Colors.green[700],
-        ),
+    return Scaffold(
         body: GoogleMap(
           onMapCreated: _onMapCreated,
+          myLocationEnabled: true,
           initialCameraPosition: CameraPosition(
-            target: _center,
+            target: LatLng(widget.lat,widget.long),
             zoom: 11.0,
           ),
+          markers: Set<Marker>.of(_markers),
         ),
-      ),
     );
+  }
+  @override
+  void dispose() {
+    super.dispose();
   }
 }
