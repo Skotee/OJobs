@@ -8,6 +8,7 @@ import 'db.dart';
 import 'map_page.dart';
 import 'signin_page.dart';
 import 'favorite_page.dart';
+import 'done_page.dart';
 
 final FirebaseAuth _auth = FirebaseAuth.instance;
 
@@ -39,6 +40,7 @@ class MyApp extends StatelessWidget {
         '/result': (context) => ResultsPage(lat: null, long: null, term: null),
         '/map': (context) => MapPage(lat: null, long: null, term: null),
         '/favorite': (context) => FavoritePage(lat: null, long: null, term: null),
+        '/done': (context) => DonePage(),
       },
       home: BootPage(),
     );
