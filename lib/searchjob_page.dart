@@ -19,6 +19,7 @@ class _SearchPageState extends State<SearchPage> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController _whatjobController = TextEditingController();
   final TextEditingController _wherejobController = TextEditingController();
+  bool isLoading = false;
 
   @override
       Widget build(BuildContext context) {
@@ -69,6 +70,9 @@ class _SearchPageState extends State<SearchPage> {
             padding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
             onPressed: () async {
                 if (_formKey.currentState.validate()) {
+                  setState(() {
+                    isLoading = true;
+                  });
                   _search();
                 }
               },
@@ -152,7 +156,9 @@ class _SearchPageState extends State<SearchPage> {
                     SizedBox(height: 20.0),
                     wherejobField,
                     SizedBox(height: 20.0),
-                    searchButton,
+                     isLoading ? Center(
+                        child: CircularProgressIndicator(),
+                      ) : searchButton,
                     SizedBox(height: 30.0),
                     SizedBox(height: 20.0),
                     addButton
@@ -178,7 +184,7 @@ class _SearchPageState extends State<SearchPage> {
       var pos = await Location().getLocation();
       placemark.add(Placemark(position: Position(latitude: pos.latitude,longitude: pos.longitude)));
     }
-    
+    isLoading = false;
     Navigator.push(
       context,
       MaterialPageRoute(

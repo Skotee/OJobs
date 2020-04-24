@@ -14,7 +14,6 @@ class JobdetailPage extends StatefulWidget {
 
 class _JobdetailState extends State<JobdetailPage> {
   TextStyle style = TextStyle(fontFamily: 'Roboto', fontSize: 20.0);
-  Stream<User> userInfo;
   @override
       Widget build(BuildContext context) {
          final cvchoiceRadio = Column(
@@ -62,47 +61,32 @@ class _JobdetailState extends State<JobdetailPage> {
           floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
         );
       }
-       Widget _buildBody(BuildContext context) {
-        return StreamBuilder<List<DocumentSnapshot>>(
-          // stream: queryGeoKeyJob(),
+      Widget _buildBody(BuildContext context){
+        return FutureBuilder<Job>(
+          future: getJob(widget.id),
           builder: (context, snapshot) {
-            print(snapshot.data);
-            if(!snapshot.hasData) {
-              return Center(
-                        child: CircularProgressIndicator(),
-                      );
+            if(snapshot.connectionState == ConnectionState.done){
+              return Container(
+                padding: EdgeInsets.only(top:21),
+                width: MediaQuery.of(context).size.width,
+                height: MediaQuery.of(context).size.height-200,
+                child: Card(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: <Widget>[
+                      Text(snapshot.data.name, style: TextStyle(fontSize: 20,backgroundColor: Colors.grey)),
+                      Text(snapshot.data.desc, style: TextStyle(fontSize: 12)),
+                    ],
+                  ),
+                )
+              );
             }
-            return Center(
-                        child: _buildList(context, snapshot.data),
-                        // child: cvchoiceRadio()
-                      );
+            else {
+              return Center(
+                child: CircularProgressIndicator(),
+              );
+            }
           },
         );
       }
-       Widget _buildList(BuildContext context, List<DocumentSnapshot> snapshot) {
-        return ListView(
-          padding: const EdgeInsets.only(top: 20.0),
-          children: snapshot.map((data) => _buildListItem(context, data)).toList(),
-        );
-      }
-       Widget _buildListItem(BuildContext context, DocumentSnapshot data) {
-        final job = Job.fromSnapshot(data);
-
-        return Padding(
-          key: ValueKey(job.name),
-          padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-          child: Container(
-            decoration: BoxDecoration(
-              border: Border.all(color: Colors.grey),
-              borderRadius: BorderRadius.circular(5.0),
-            ),
-            child: ListTile(
-              title: Text(job.name),
-              trailing: Text(job.desc),
-              onTap: () => print(job.desc),
-            ),
-          ),
-        );
-      }
-
 }
