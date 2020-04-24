@@ -74,7 +74,7 @@ class _JobdetailState extends State<JobdetailPage> {
             }
             return Center(
                         child: _buildList(context, snapshot.data),
-                        child: cvchoiceRadio()
+                        // child: cvchoiceRadio()
                       );
           },
         );

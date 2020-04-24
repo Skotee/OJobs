@@ -104,6 +104,43 @@ class _SearchPageState extends State<SearchPage> {
           ),
         );
         return Scaffold(
+          drawer: new Drawer(
+            child: ListView(
+              children: <Widget>[
+                new UserAccountsDrawerHeader(
+                  accountName: new Text('Raja'),
+                  accountEmail: new Text('Raja@gpl.pl'),
+                  // currentAccountPicture: new CircleAvatar(
+                  //   backgroundImage:
+                  // )
+                  ),
+                  new ListTile(
+                    title: new Text('Go to profile'),
+                    onTap: () {
+                      Navigator.pushReplacementNamed(context, '/profile');
+                    }
+                  ),
+                  new ListTile(
+                    title: new Text('Go to favorites'),
+                    onTap: () {
+                      Navigator.pushReplacementNamed(context, '/favorite');
+                    }
+                  ),
+                  new ListTile(
+                    title: new Text('Go to applied jobs'),
+                    onTap: () {
+                      Navigator.pushReplacementNamed(context, '/applied');
+                    }
+                  ),
+                  new ListTile(
+                    title: new Text('Logout'),
+                    onTap: () {
+                      // action to logout
+                    }
+                  )
+              ]
+            )
+          ),
           body: Form(
             key: _formKey,
             child: Container(
