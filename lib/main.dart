@@ -34,7 +34,30 @@ class MyApp extends StatelessWidget {
         brightness: Brightness.dark,
       ),
       routes: {
-        '/login': (context) => LoginPage(title: 'OJobs'),
+        '/': (BuildContext context) {
+          return StreamBuilder<FirebaseUser>(
+          stream: globals.auth.onAuthStateChanged,
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.active) {
+              FirebaseUser user = snapshot.data;
+              if (user == null) {
+                return LoginPage();
+              }
+              globals.currentUser = user;
+              globals.update();
+              return SearchPage();
+
+            } else {
+              return Scaffold(
+                body: Center(
+                  child: CircularProgressIndicator(),
+                ),
+              );
+            }
+          },
+          );
+        },
+        '/login': (context) => LoginPage(),
         '/register': (context) => RegisterPage(),
         '/search': (context) => SearchPage(),
         '/result': (context) => ResultsPage(lat: null, long: null, term: null),
@@ -44,13 +67,12 @@ class MyApp extends StatelessWidget {
         '/jobdetail': (context) => JobdetailPage(id: null),
 
       },
-      home: BootPage(),
     );
   }
 }
-
-
+/*
 class BootPage extends StatefulWidget {
+  
   @override
   BootPageState createState() => BootPageState();
 }
@@ -58,20 +80,23 @@ class BootPageState extends State<BootPage> {
   @override
   Widget build(BuildContext context) {
     _handleBoot();
-    return Center(
-      child: CircularProgressIndicator(),
+    return Scaffold(
+      body:Center(
+        child: CircularProgressIndicator(),
+      ),
     );
   }
 
   void _handleBoot() async{
     final FirebaseUser currentUser = await globals.auth.currentUser();
     if(currentUser == null)
-      Navigator.pushReplacementNamed(context, '/login');
+      Navigator.pushNamed(context, '/login');
     else
     {
       globals.currentUser = currentUser;
       globals.currentUserInfo = await getUser(currentUser.uid);
-      Navigator.pushReplacementNamed(context, '/search');
+      Navigator.pushNamed(context, '/search');
     }
   }
 }
+*/

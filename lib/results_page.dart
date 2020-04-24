@@ -1,8 +1,8 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:o_jobs/db.dart';
 import './map_page.dart';
+import 'jobdetail_page.dart';
 
 class ResultsPage extends StatefulWidget {
   final double lat;
@@ -16,7 +16,6 @@ class ResultsPage extends StatefulWidget {
 
 class _ResultsPageState extends State<ResultsPage> {
   TextStyle style = TextStyle(fontFamily: 'Roboto', fontSize: 20.0);
-  Stream<User> userInfo;
   @override
       Widget build(BuildContext context) {
           final goToMapButton = Material(
@@ -79,7 +78,12 @@ class _ResultsPageState extends State<ResultsPage> {
             child: ListTile(
               title: Text(job.name),
               trailing: Text(job.desc),
-              onTap: () => Navigator.pushReplacementNamed(context, '/jobdetail'),
+              onTap: () => Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => JobdetailPage(id: job.id),
+                ),
+              ),
             ),
           ),
         );

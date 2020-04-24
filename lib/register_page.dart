@@ -5,26 +5,12 @@ import 'package:flutter/material.dart';
 final FirebaseAuth _auth = FirebaseAuth.instance;
 
 class RegisterPage extends StatefulWidget {
-  RegisterPage({Key key, this.title}) : super(key: key);
-
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
-
-  final String title;
-
   @override
   _RegisterPageState createState() => _RegisterPageState();
 }
 
 class _RegisterPageState extends State<RegisterPage> {
   TextStyle style = TextStyle(fontFamily: 'Roboto', fontSize: 20.0);
-  FirebaseUser user;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
@@ -33,6 +19,7 @@ class _RegisterPageState extends State<RegisterPage> {
   final TextEditingController _mobileController = TextEditingController();
   final TextEditingController _addressController = TextEditingController();
   final TextEditingController _countryController = TextEditingController();
+  bool isLoading = false;
 
   @override
       Widget build(BuildContext context) {
@@ -159,10 +146,12 @@ class _RegisterPageState extends State<RegisterPage> {
           child: MaterialButton(
             minWidth: MediaQuery.of(context).size.width,
             padding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
-            onPressed: () async {
+            onPressed: () {
                 if (_formKey.currentState.validate()) {
+                  setState(() {
+                    isLoading = true;
+                  });
                   _register();
-
                 }
               },
             child: Text("Register",
@@ -179,7 +168,7 @@ class _RegisterPageState extends State<RegisterPage> {
           child: MaterialButton(
             minWidth: MediaQuery.of(context).size.width,
             padding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
-            onPressed: () => Navigator.pushNamed(context, '/login'),
+            onPressed: () => Navigator.pop(context),
             child: Text("Login",
                 textAlign: TextAlign.center,
                 style: style.copyWith(
@@ -215,7 +204,9 @@ class _RegisterPageState extends State<RegisterPage> {
                     SizedBox(height: 8.0),
                     passwordField,
                     SizedBox(height: 8.0),
-                    registerButton,
+                    isLoading ? Center(
+                        child: CircularProgressIndicator(),
+                      ) : registerButton,
                     SizedBox(height: 8.0),
                     SizedBox(height: 8.0),
                     goToLoginPageButton,
@@ -258,7 +249,16 @@ class _RegisterPageState extends State<RegisterPage> {
           'favorite': null,
           'applied': null
         });
+        Scaffold.of(context)
+          .showSnackBar(SnackBar(content: Text('Successfully registered')));
         Navigator.pop(context);
+    }
+    else {
+      Scaffold.of(context)
+        .showSnackBar(SnackBar(content: Text('Register error')));
+      setState(() {
+        isLoading = false;
+      });
     }
   }
 }

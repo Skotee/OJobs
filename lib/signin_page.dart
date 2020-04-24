@@ -2,37 +2,26 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:o_jobs/db.dart';
 import 'globals.dart' as globals;
 
 class LoginPage extends StatefulWidget {
-  LoginPage({Key key, this.title}) : super(key: key);
-
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
-
-  final String title;
-
   @override
   _LoginPageState createState() => _LoginPageState();
 }
 
 class _LoginPageState extends State<LoginPage> {
+  final _scaffoldKey = GlobalKey<ScaffoldState>();
   TextStyle style = TextStyle(fontFamily: 'Roboto', fontSize: 20.0);
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  bool _success;
+  bool isLoading = false;
 
   @override
-      Widget build(BuildContext context) {
+  Widget build(BuildContext context) {
         final logoField = RichText(
           text: TextSpan(
             children: <TextSpan>[
@@ -79,9 +68,12 @@ class _LoginPageState extends State<LoginPage> {
           child: MaterialButton(
             minWidth: MediaQuery.of(context).size.width,
             padding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
-            onPressed: () async {
+            onPressed: () {
                 if (_formKey.currentState.validate()) {
                   _signInWithEmailAndPassword();
+                  setState(() {
+                    isLoading = true;
+                  });
                 }
               },
             child: Text("Login",
@@ -105,6 +97,7 @@ class _LoginPageState extends State<LoginPage> {
           ),
         );
         return Scaffold(
+          key: _scaffoldKey,
           body: Form(
             key: _formKey,
             child: Container(
@@ -121,22 +114,11 @@ class _LoginPageState extends State<LoginPage> {
                     SizedBox(height: 25.0),
                     passwordField,
                     SizedBox(height: 35.0),
-                    loginButton,
+                    isLoading ? Center(
+                        child: CircularProgressIndicator(),
+                      ) : loginButton,
                     SizedBox(height: 15.0), 
                     goToRegisterPageButton,
-                    //TODO: delete container after implementation of main page
-                    Container(
-                      alignment: Alignment.center,
-                      padding: const EdgeInsets.symmetric(horizontal: 16),
-                      child: Text(
-                        _success == null
-                            ? ''
-                            : (_success
-                                ? 'Successfully signed in '
-                                : 'Sign in failed'),
-                        style: TextStyle(color: Colors.red),
-                      ),
-                    ),
                   ],
                 ),
               ),
@@ -152,17 +134,17 @@ class _LoginPageState extends State<LoginPage> {
       }
 
       void _signInWithEmailAndPassword() async {
-        globals.currentUser = (await globals.auth.signInWithEmailAndPassword(
-          email: _emailController.text,
-          password: _passwordController.text,
-        )).user;
-        if (globals.currentUser != null) {
+        try {
+          await globals.auth.signInWithEmailAndPassword(
+            email: _emailController.text,
+            password: _passwordController.text,
+          );
+        } catch (e) {
           setState(() {
-            _success = true;
+            isLoading = false;
           });
-          Navigator.pushNamed(context, '/search');
-        } else {
-          _success = false;
+          _scaffoldKey.currentState
+            .showSnackBar(SnackBar(content: Text('Email or password error')));
         }
       }
 }

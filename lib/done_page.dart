@@ -1,4 +1,3 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class DonePage extends StatefulWidget {
@@ -8,7 +7,6 @@ class DonePage extends StatefulWidget {
 
 class _DonePageState extends State<DonePage> {
   TextStyle style = TextStyle(fontFamily: 'Roboto', fontSize: 20.0);
-  FirebaseUser user;
 
   @override
       Widget build(BuildContext context) {
@@ -19,7 +17,7 @@ class _DonePageState extends State<DonePage> {
           child: MaterialButton(
             minWidth: MediaQuery.of(context).size.width,
             padding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
-            onPressed: () => Navigator.pushReplacementNamed(context, '/search'),
+            onPressed: () => Navigator.pop(context),
             child: Text("Done",
                 textAlign: TextAlign.center,
                 style: style.copyWith(

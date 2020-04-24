@@ -2,6 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:o_jobs/db.dart';
 
+import 'jobdetail_page.dart';
+
 class FavoritePage extends StatefulWidget {
   @override
   _FavoritePageState createState() => _FavoritePageState();
@@ -51,7 +53,12 @@ class _FavoritePageState extends State<FavoritePage> {
             child: ListTile(
               title: Text(job.name),
               trailing: Text(job.desc),
-              onTap: () => print(job.desc),
+              onTap: () => Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => JobdetailPage(id: job.id),
+                ),
+              ),
             ),
           ),
         );

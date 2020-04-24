@@ -7,33 +7,18 @@ import 'package:o_jobs/db.dart';
 import 'package:geolocator/geolocator.dart';
 
 import 'results_page.dart';
+import 'globals.dart' as globals;
 
 class SearchPage extends StatefulWidget {
-  SearchPage({Key key, this.title}) : super(key: key);
-
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
-
-  final String title;
-
   @override
   _SearchPageState createState() => _SearchPageState();
 }
 
 class _SearchPageState extends State<SearchPage> {
   TextStyle style = TextStyle(fontFamily: 'Roboto', fontSize: 20.0);
-  FirebaseUser user;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController _whatjobController = TextEditingController();
   final TextEditingController _wherejobController = TextEditingController();
-  Stream<User> userInfo;
-  bool _success;
 
   @override
       Widget build(BuildContext context) {
@@ -108,8 +93,12 @@ class _SearchPageState extends State<SearchPage> {
             child: ListView(
               children: <Widget>[
                 new UserAccountsDrawerHeader(
-                  accountName: new Text('Raja'),
-                  accountEmail: new Text('Raja@gpl.pl'),
+                  accountName: new Text(globals.currentUserInfo == null
+                    ? ''
+                    :globals.currentUserInfo.name),
+                  accountEmail: new Text(globals.currentUserInfo == null
+                    ? ''
+                    :globals.currentUserInfo.email),
                   // currentAccountPicture: new CircleAvatar(
                   //   backgroundImage:
                   // )
@@ -117,25 +106,31 @@ class _SearchPageState extends State<SearchPage> {
                   new ListTile(
                     title: new Text('Go to profile'),
                     onTap: () {
-                      Navigator.pushReplacementNamed(context, '/profile');
+                      Navigator.pushNamed(context, '/profile');
                     }
                   ),
                   new ListTile(
                     title: new Text('Go to favorites'),
                     onTap: () {
-                      Navigator.pushReplacementNamed(context, '/favorite');
+                      Navigator.pushNamed(context, '/favorite');
                     }
                   ),
                   new ListTile(
                     title: new Text('Go to applied jobs'),
                     onTap: () {
-                      Navigator.pushReplacementNamed(context, '/applied');
+                      Navigator.pushNamed(context, '/applied');
                     }
                   ),
                   new ListTile(
                     title: new Text('Logout'),
-                    onTap: () {
-                      // action to logout
+                    onTap: () async {
+                      globals.currentUserInfo = null;
+                      await globals.auth.signOut();
+                      print(Navigator.defaultRouteName.toString());
+                      Navigator.popUntil(
+                        context,
+                        ModalRoute.withName(Navigator.defaultRouteName),
+                      );
                     }
                   )
               ]
