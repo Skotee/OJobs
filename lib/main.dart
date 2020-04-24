@@ -25,6 +25,21 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
         brightness: Brightness.dark,
       ),
+      onGenerateRoute: (settings){
+        switch (settings.name) {
+          case '/login': MaterialPageRoute(builder: (context) => LoginPage());
+            break;
+          case '/register': MaterialPageRoute(builder: (context) => RegisterPage());
+            break;
+          case '/search': MaterialPageRoute(builder: (context) => SearchPage());
+            break;
+          case '/favorite': MaterialPageRoute(builder: (context) => FavoritePage());
+            break;
+          case '/done': MaterialPageRoute(builder: (context) => DonePage());
+            break;
+          default:
+        }
+      },
       routes: {
         '/': (context) {
           return StreamBuilder<FirebaseUser>(
@@ -49,7 +64,7 @@ class MyApp extends StatelessWidget {
           },
           );
         },
-        '/login': (context) => LoginPage(),
+        /*'/login': (context) => LoginPage(),
         '/register': (context) => RegisterPage(),
         '/search': (context) => SearchPage(),
         '/result': (context) => ResultsPage(lat: null, long: null, term: null),
@@ -57,7 +72,7 @@ class MyApp extends StatelessWidget {
         '/favorite': (context) => FavoritePage(),
         '/done': (context) => DonePage(),
         '/jobdetail': (context) => JobdetailPage(id: null),
-
+*/
       },
     );
   }

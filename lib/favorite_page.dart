@@ -11,7 +11,6 @@ class FavoritePage extends StatefulWidget {
 
 class _FavoritePageState extends State<FavoritePage> {
   TextStyle style = TextStyle(fontFamily: 'Roboto', fontSize: 20.0);
-  Stream<User> userInfo;
   @override
       Widget build(BuildContext context) {
         return Scaffold(

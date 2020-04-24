@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:o_jobs/favorite_page.dart';
 import 'package:o_jobs/globals.dart' as globals;
 
 class BaseAppBar extends StatelessWidget{
@@ -6,35 +7,42 @@ class BaseAppBar extends StatelessWidget{
     return Drawer(
         child: ListView(
           children: <Widget>[
-            new UserAccountsDrawerHeader(
-              accountName: new Text(globals.currentUserInfo == null ? '' :globals.currentUserInfo.name),
-              accountEmail: new Text(globals.currentUserInfo == null ? '' :globals.currentUserInfo.email),
+            UserAccountsDrawerHeader(
+              accountName: Text(globals.currentUserInfo == null ? '' :globals.currentUserInfo.name),
+              accountEmail: Text(globals.currentUserInfo == null ? '' :globals.currentUserInfo.email),
+              currentAccountPicture: CircleAvatar(backgroundImage: NetworkImage(globals.currentUserInfo.pic)),
               // 
               // currentUserInfo.email
               // currentAccountPicture: new CircleAvatar(
               //   backgroundImage:
               // )
             ),
-            new ListTile(
-              title: new Text('Go to profile'),
+            ListTile(
+              title: Text('Go to profile'),
               onTap: () {
-                Navigator.pushReplacementNamed(context, '/profile');
+                Navigator.pushNamed(context, '/profile');
               }
             ),
-            new ListTile(
-              title: new Text('Go to favorites'),
+            ListTile(
+              title: Text('Go to favorites'),
               onTap: () {
-                Navigator.pushReplacementNamed(context, '/favorite');
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => FavoritePage(),
+                  ),
+                );
+                //Navigator.pushNamed(context, '/favorite');
               }
             ),
-            new ListTile(
-              title: new Text('Go to applied jobs'),
+            ListTile(
+              title: Text('Go to applied jobs'),
               onTap: () {
-                Navigator.pushReplacementNamed(context, '/applied');
+                Navigator.pushNamed(context, '/applied');
               }
             ),
-            new ListTile(
-              title: new Text('Logout'),
+            ListTile(
+              title: Text('Logout'),
               onTap: () async {
                 globals.currentUserInfo = null;
                 await globals.auth.signOut();
