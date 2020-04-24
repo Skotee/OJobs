@@ -1,15 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:o_jobs/globals.dart';
+import 'package:o_jobs/globals.dart' as globals;
 
 class BaseAppBar extends StatelessWidget{
   Widget build(BuildContext context) {
-    return Scaffold(
-      drawer: Drawer(
+    return Drawer(
         child: ListView(
           children: <Widget>[
             new UserAccountsDrawerHeader(
-              accountName: new Text(currentUserInfo == null ? '' :currentUserInfo.name),
-              accountEmail: new Text(currentUserInfo == null ? '' :currentUserInfo.email),
+              accountName: new Text(globals.currentUserInfo == null ? '' :globals.currentUserInfo.name),
+              accountEmail: new Text(globals.currentUserInfo == null ? '' :globals.currentUserInfo.email),
               // 
               // currentUserInfo.email
               // currentAccountPicture: new CircleAvatar(
@@ -37,8 +36,8 @@ class BaseAppBar extends StatelessWidget{
             new ListTile(
               title: new Text('Logout'),
               onTap: () async {
-                currentUserInfo = null;
-                await auth.signOut();
+                globals.currentUserInfo = null;
+                await globals.auth.signOut();
                 print(Navigator.defaultRouteName.toString());
                 Navigator.popUntil(
                   context,
@@ -48,7 +47,6 @@ class BaseAppBar extends StatelessWidget{
             )
         ]
       )
-      )
-    );
+      );
   }
 }

@@ -5,7 +5,7 @@ import 'package:location/location.dart';
 import 'package:o_jobs/db.dart';
 
 import 'package:geolocator/geolocator.dart';
-import 'menu_bar.dart'
+import 'menu_bar.dart';
 import 'results_page.dart';
 import 'globals.dart' as globals;
 
@@ -93,6 +93,7 @@ class _SearchPageState extends State<SearchPage> {
           ),
         );
         return Scaffold(
+          drawer: BaseAppBar(),
           body: Form(
             key: _formKey,
             child: Container(
