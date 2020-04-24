@@ -5,7 +5,7 @@ import 'package:location/location.dart';
 import 'package:o_jobs/db.dart';
 
 import 'package:geolocator/geolocator.dart';
-
+import 'menu_bar.dart'
 import 'results_page.dart';
 import 'globals.dart' as globals;
 
@@ -89,53 +89,6 @@ class _SearchPageState extends State<SearchPage> {
           ),
         );
         return Scaffold(
-          drawer: new Drawer(
-            child: ListView(
-              children: <Widget>[
-                new UserAccountsDrawerHeader(
-                  accountName: new Text(globals.currentUserInfo == null
-                    ? ''
-                    :globals.currentUserInfo.name),
-                  accountEmail: new Text(globals.currentUserInfo == null
-                    ? ''
-                    :globals.currentUserInfo.email),
-                  // currentAccountPicture: new CircleAvatar(
-                  //   backgroundImage:
-                  // )
-                  ),
-                  new ListTile(
-                    title: new Text('Go to profile'),
-                    onTap: () {
-                      Navigator.pushNamed(context, '/profile');
-                    }
-                  ),
-                  new ListTile(
-                    title: new Text('Go to favorites'),
-                    onTap: () {
-                      Navigator.pushNamed(context, '/favorite');
-                    }
-                  ),
-                  new ListTile(
-                    title: new Text('Go to applied jobs'),
-                    onTap: () {
-                      Navigator.pushNamed(context, '/applied');
-                    }
-                  ),
-                  new ListTile(
-                    title: new Text('Logout'),
-                    onTap: () async {
-                      globals.currentUserInfo = null;
-                      await globals.auth.signOut();
-                      print(Navigator.defaultRouteName.toString());
-                      Navigator.popUntil(
-                        context,
-                        ModalRoute.withName(Navigator.defaultRouteName),
-                      );
-                    }
-                  )
-              ]
-            )
-          ),
           body: Form(
             key: _formKey,
             child: Container(
