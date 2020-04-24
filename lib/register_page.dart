@@ -1,8 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:o_jobs/db.dart';
-import './main.dart';
 
 final FirebaseAuth _auth = FirebaseAuth.instance;
 
@@ -35,9 +33,6 @@ class _RegisterPageState extends State<RegisterPage> {
   final TextEditingController _mobileController = TextEditingController();
   final TextEditingController _addressController = TextEditingController();
   final TextEditingController _countryController = TextEditingController();
-  Stream<User> userInfo;
-  bool _success;
-  String _userEmail;
 
   @override
       Widget build(BuildContext context) {
@@ -247,13 +242,8 @@ class _RegisterPageState extends State<RegisterPage> {
     final FirebaseUser user = (await _auth.createUserWithEmailAndPassword(
       email: _emailController.text,
       password: _passwordController.text,
-    ))
-        .user;
+    )).user;
     if (user != null) {
-      setState(() {
-        _success = true;
-        _userEmail = user.email;
-      });
       Firestore.instance.collection('USER').document(user.uid).setData({
           'name': _nameController.text,
           'lastname': _lastnameController.text,
@@ -269,8 +259,6 @@ class _RegisterPageState extends State<RegisterPage> {
           'applied': null
         });
         Navigator.pop(context);
-    } else {
-      _success = false;
     }
   }
 }

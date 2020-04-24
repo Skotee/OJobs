@@ -1,16 +1,8 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:o_jobs/db.dart';
 
-final FirebaseAuth _auth = FirebaseAuth.instance;
-
 class FavoritePage extends StatefulWidget {
-  final double lat;
-  final double long;
-  final String term;
-  FavoritePage({Key key, @required this.term, @required this.lat,@required this.long}) : super(key: key);
-
   @override
   _FavoritePageState createState() => _FavoritePageState();
 }
@@ -26,8 +18,8 @@ class _FavoritePageState extends State<FavoritePage> {
         );
       }
        Widget _buildBody(BuildContext context) {
-        return StreamBuilder<List<DocumentSnapshot>>(
-          stream: queryGeoKeyJob(widget.term,widget.lat,widget.long),
+        return StreamBuilder<QuerySnapshot>(
+          stream: queryFavoriteList(),
           builder: (context, snapshot) {
             print(snapshot.data);
             if(!snapshot.hasData) {
@@ -35,7 +27,7 @@ class _FavoritePageState extends State<FavoritePage> {
                         child: CircularProgressIndicator(),
                       );
             }
-            return _buildList(context, snapshot.data);
+            return _buildList(context, snapshot.data.documents);
           },
         );
       }

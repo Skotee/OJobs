@@ -6,9 +6,9 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:location/location.dart';
 import 'package:geolocator/geolocator.dart';
+import 'globals.dart' as globals;
 
-
-Stream<User> getUser(String id){
+Future<User> getUser(String id){
   return Firestore.instance
   .collection('USER')
   .document(id)
@@ -20,7 +20,7 @@ Stream<User> getUser(String id){
       print(e);
       return null;
     }
-  }).asStream();
+  });
 }
 
 class User {
@@ -50,13 +50,11 @@ class User {
     pic = snapshot['pic'];
 }
 
-Future<List<Job>> getJobList(List<dynamic> id) async {
-  QuerySnapshot qShot = 
-      await Firestore.instance.collection('JOBS').where(FieldPath.documentId,whereIn:id).getDocuments();
-
-  return qShot.documents.map((doc) => Job.fromSnapshot(doc)).toList();
+Stream<QuerySnapshot> getJobList(List<dynamic> id) {
+  return Firestore.instance.collection('JOBS').where(FieldPath.documentId,whereIn:id).snapshots();
 }
-Stream<Job> getJob(String id){
+
+Future<Job> getJob(String id){
   return Firestore.instance
   .collection('JOBS')
   .document(id)
@@ -68,7 +66,7 @@ Stream<Job> getJob(String id){
       print(e);
       return null;
     }
-  }).asStream();
+  });
 }
 
 class Job {
@@ -85,7 +83,6 @@ class Job {
     position = snapshot['position']['geopoint'],
     skillList = snapshot['skill_list'];
 }
-
 
 Future uploadFile(String path, String name, File img, String id) async {
   StorageReference reference = FirebaseStorage.instance.ref().child(path);
@@ -113,8 +110,6 @@ Future uploadFile(String path, String name, File img, String id) async {
     Fluttertoast.showToast(msg: err.toString());
   });
 }
-
-
 
 Future<List<Job>> queryJob({List<String> terms, List<String> skills, GeoPoint coord}) async {
   if(terms != null)
@@ -147,31 +142,20 @@ Future<List<Job>> queryJob({List<String> terms, List<String> skills, GeoPoint co
   else {
     QuerySnapshot qShot = 
       await Firestore.instance.collection('JOBS').getDocuments();
-
     return qShot.documents.map((doc) => Job.fromSnapshot(doc)).toList();
   }
+}
 
-  
+Stream<QuerySnapshot> queryFavoriteList() {
+  return getJobList(globals.currentUserInfo.favorite);
 }
 
 Stream<List<DocumentSnapshot>> queryGeoKeyJob(String name, double lat, double long) {
   var terms = name.split(" ");
   GeoFirePoint center = Geoflutterfire().point(latitude: lat, longitude: long);
-  var collectionReference = Firestore.instance.collection('JOBS');
-  //.where('key_term',arrayContainsAny: terms);
+  var collectionReference = Firestore.instance.collection('JOBS').where('key_term',arrayContainsAny: terms);
   var searchRef = Geoflutterfire().collection(collectionRef: collectionReference).within(
           center: center, radius: 20, field: 'position');
   return searchRef;
   //return searchRef.map((list) => list.map((doc) => Job.fromSnapshot(doc)).toList());
-}
-
-
-//TODO: UPDATE THE QUERY
-queryMapJob(double radius) async{
-  var pos = await Location().getLocation();
-  GeoFirePoint center = Geoflutterfire().point(latitude: pos.latitude, longitude: pos.longitude);
-
-  Geoflutterfire().collection(collectionRef: Firestore.instance.collection('JOBS'))
-    .within(center: center, radius: radius, field: 'position')
-    .listen((onData) => onData.forEach((f) => print(f.data['name'])));
 }

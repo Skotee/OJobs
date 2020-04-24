@@ -10,8 +10,7 @@ import 'signin_page.dart';
 import 'favorite_page.dart';
 import 'done_page.dart';
 import 'jobdetail_page.dart';
-
-final FirebaseAuth _auth = FirebaseAuth.instance;
+import 'globals.dart' as globals;
 
 void main() => runApp(MyApp());
 
@@ -40,9 +39,9 @@ class MyApp extends StatelessWidget {
         '/search': (context) => SearchPage(),
         '/result': (context) => ResultsPage(lat: null, long: null, term: null),
         '/map': (context) => MapPage(lat: null, long: null, term: null),
-        '/favorite': (context) => FavoritePage(lat: null, long: null, term: null),
+        '/favorite': (context) => FavoritePage(),
         '/done': (context) => DonePage(),
-        '/jobdetail': (context) => JobdetailPage(),
+        '/jobdetail': (context) => JobdetailPage(id: null),
 
       },
       home: BootPage(),
@@ -65,10 +64,14 @@ class BootPageState extends State<BootPage> {
   }
 
   void _handleBoot() async{
-  final FirebaseUser currentUser = await _auth.currentUser();
-  if(currentUser == null)
-    Navigator.pushReplacementNamed(context, '/login');
-  else
-    Navigator.pushReplacementNamed(context, '/search');
+    final FirebaseUser currentUser = await globals.auth.currentUser();
+    if(currentUser == null)
+      Navigator.pushReplacementNamed(context, '/login');
+    else
+    {
+      globals.currentUser = currentUser;
+      globals.currentUserInfo = await getUser(currentUser.uid);
+      Navigator.pushReplacementNamed(context, '/search');
+    }
   }
 }

@@ -4,8 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:o_jobs/db.dart';
 import './map_page.dart';
 
-final FirebaseAuth _auth = FirebaseAuth.instance;
-
 class ResultsPage extends StatefulWidget {
   final double lat;
   final double long;
@@ -81,7 +79,7 @@ class _ResultsPageState extends State<ResultsPage> {
             child: ListTile(
               title: Text(job.name),
               trailing: Text(job.desc),
-              onTap: () => print(job.desc),
+              onTap: () => Navigator.pushReplacementNamed(context, '/jobdetail'),
             ),
           ),
         );

@@ -8,8 +8,6 @@ import 'package:geolocator/geolocator.dart';
 
 import 'results_page.dart';
 
-final FirebaseAuth _auth = FirebaseAuth.instance;
-
 class SearchPage extends StatefulWidget {
   SearchPage({Key key, this.title}) : super(key: key);
 

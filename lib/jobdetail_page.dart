@@ -3,11 +3,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:o_jobs/db.dart';
 
-final FirebaseAuth _auth = FirebaseAuth.instance;
 enum CV { cv1, cv2 }
 
 class JobdetailPage extends StatefulWidget {
-
+  final String id;
+  JobdetailPage({Key key, @required this.id}) : super(key: key);
   @override
   _JobdetailState createState() => _JobdetailState();
 }

@@ -2,15 +2,9 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-import 'dart:io';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:geoflutterfire/geoflutterfire.dart';
-import 'package:location/location.dart';
 import 'package:o_jobs/db.dart';
-
-final FirebaseAuth _auth = FirebaseAuth.instance;
+import 'globals.dart' as globals;
 
 class LoginPage extends StatefulWidget {
   LoginPage({Key key, this.title}) : super(key: key);
@@ -32,13 +26,10 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   TextStyle style = TextStyle(fontFamily: 'Roboto', fontSize: 20.0);
-  FirebaseUser user;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  Stream<User> userInfo;
   bool _success;
-  String _userEmail;
 
   @override
       Widget build(BuildContext context) {
@@ -141,7 +132,7 @@ class _LoginPageState extends State<LoginPage> {
                         _success == null
                             ? ''
                             : (_success
-                                ? 'Successfully signed in ' + _userEmail
+                                ? 'Successfully signed in '
                                 : 'Sign in failed'),
                         style: TextStyle(color: Colors.red),
                       ),
@@ -161,16 +152,13 @@ class _LoginPageState extends State<LoginPage> {
       }
 
       void _signInWithEmailAndPassword() async {
-        user = (await _auth.signInWithEmailAndPassword(
+        globals.currentUser = (await globals.auth.signInWithEmailAndPassword(
           email: _emailController.text,
           password: _passwordController.text,
-        ))
-            .user;
-        if (user != null) {
+        )).user;
+        if (globals.currentUser != null) {
           setState(() {
             _success = true;
-            userInfo = getUser(user.uid);
-            _userEmail = user.email;
           });
           Navigator.pushNamed(context, '/search');
         } else {
