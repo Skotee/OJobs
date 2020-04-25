@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:o_jobs/appliedjobs_page.dart';
 import 'package:o_jobs/favorite_page.dart';
+import 'package:o_jobs/profile_page.dart';
 import 'package:o_jobs/globals.dart' as globals;
 
 class BaseAppBar extends StatelessWidget{
@@ -16,7 +17,13 @@ class BaseAppBar extends StatelessWidget{
             ListTile(
               title: Text('Go to profile'),
               onTap: () {
-                Navigator.pushNamed(context, '/profile');
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => ProfilePage(),
+                  ),
+                );
+                // Navigator.pushNamed(context, '/profile');
               }
             ),
             ListTile(

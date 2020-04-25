@@ -11,6 +11,7 @@ import 'favorite_page.dart';
 import 'done_page.dart';
 import 'jobdetail_page.dart';
 import 'appliedjobs_page.dart';
+import 'profile_page.dart';
 import 'globals.dart' as globals;
 
 void main() => runApp(MyApp());
@@ -39,6 +40,8 @@ class MyApp extends StatelessWidget {
           case '/done': MaterialPageRoute(builder: (context) => DonePage());
             break;
           case '/appliedjobs': MaterialPageRoute(builder: (context) => AppliedJobsPage());
+            break;
+          case '/profile': MaterialPageRoute(builder: (context) => ProfilePage());
             break;
           default:
         }

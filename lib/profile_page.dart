@@ -2,8 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:o_jobs/db.dart';
 
-import 'jobdetail_page.dart';
-
 class ProfilePage extends StatefulWidget {
   @override
   _ProfilePageState createState() => _ProfilePageState();
@@ -12,8 +10,37 @@ class ProfilePage extends StatefulWidget {
 class _ProfilePageState extends State<ProfilePage> {
   TextStyle style = TextStyle(fontFamily: 'Roboto', fontSize: 20.0);
   Stream<User> userInfo;
+
   @override
       Widget build(BuildContext context) {
+        final emailField = RichText(
+          text: TextSpan(
+            children: <TextSpan>[
+            TextSpan(text: 'Email', style: TextStyle(fontSize: 20)),
+          ]
+          )
+        );
+        final phoneField = RichText(
+          text: TextSpan(
+            children: <TextSpan>[
+            TextSpan(text: 'Mobile phone number', style: TextStyle(fontSize: 20)),
+          ]
+          )
+        );
+        final addressField = RichText(
+          text: TextSpan(
+            children: <TextSpan>[
+            TextSpan(text: 'Address', style: TextStyle(fontSize: 20)),
+          ]
+          )
+        );
+        final countryField = RichText(
+          text: TextSpan(
+            children: <TextSpan>[
+            TextSpan(text: 'Country', style: TextStyle(fontSize: 20)),
+          ]
+          )
+        );
         return Scaffold(
           body: _buildBody(context),
           floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
@@ -26,8 +53,8 @@ class _ProfilePageState extends State<ProfilePage> {
             print(snapshot.data);
             if(!snapshot.hasData) {
               return Center(
-                        child: CircularProgressIndicator(),
-                      );
+                  child: CircularProgressIndicator(),
+                );
             }
             return _buildList(context, snapshot.data.documents);
           },
@@ -40,10 +67,10 @@ class _ProfilePageState extends State<ProfilePage> {
         );
       }
        Widget _buildListItem(BuildContext context, DocumentSnapshot data) {
-        final job = Job.fromSnapshot(data);
+        final user = User.fromSnapshot(data);
 
         return Padding(
-          key: ValueKey(job.name),
+          key: ValueKey(user.name),
           padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
           child: Container(
             decoration: BoxDecoration(
@@ -51,17 +78,10 @@ class _ProfilePageState extends State<ProfilePage> {
               borderRadius: BorderRadius.circular(5.0),
             ),
             child: ListTile(
-              title: Text(job.name),
-              trailing: Text(job.desc),
-              onTap: () => Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => JobdetailPage(id: job.id),
-                ),
-              ),
+              title: Text(user.name),
+              // trailing: Text(job.desc),
             ),
           ),
         );
       }
-
 }
