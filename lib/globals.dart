@@ -12,7 +12,7 @@ User currentUserInfo;
 
 void update() async {
   currentUserInfo = await getUser(currentUser.uid);
-  if(currentUserInfo.pic != null){
+  if(currentUserInfo.pic.isNotEmpty){
     var gsReference = await FirebaseStorage.instance.getReferenceFromUrl(currentUserInfo.pic);
     currentUserInfo.pic = await gsReference.getDownloadURL();
   }

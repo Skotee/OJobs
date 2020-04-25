@@ -74,15 +74,25 @@ class Job {
   String id;
   String name;
   String desc;
-  GeoPoint position;
+  GeoFirePoint position;
   List<dynamic> skillList;
-
+  Job({this.name,this.desc,this.position,this.skillList});
   Job.fromSnapshot(DocumentSnapshot snapshot):
     id = snapshot.documentID,
     name = snapshot['name'],
     desc = snapshot['desc'],
-    position = snapshot['position']['geopoint'],
+    position = snapshot['position'],
     skillList = snapshot['skill_list'];
+
+  toFirestore(){
+    Firestore.instance.collection('JOBS').add({
+      'name': this.name,
+      'desc': this.desc,
+      'key_term': this.name.split(" "),
+      'position': this.position.data,
+      'skill_list': skillList
+    });
+  }
 }
 
 Future uploadFile(String path, String name, File img, String id) async {

@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:location/location.dart';
 import 'package:o_jobs/db.dart';
 
@@ -88,7 +89,9 @@ class _SearchPageState extends State<SearchPage> {
             child: InkWell(
               splashColor: Colors.red, // inkwell color
               child: SizedBox(width: 56, height: 56, child: Icon(Icons.add_circle)),
-              onTap: () {},
+              onTap: () {
+                Job(name:'IOS Dev',desc:'Lorem Ipsum',position:Geoflutterfire().point(latitude: 65.059374, longitude: 25.467033),skillList:['IOS','Swift','flutter']).toFirestore();
+              },
             ),
           ),
         );

@@ -12,42 +12,29 @@ class BaseAppBar extends StatelessWidget{
             UserAccountsDrawerHeader(
               accountName: Text(globals.currentUserInfo == null ? '' :globals.currentUserInfo.name),
               accountEmail: Text(globals.currentUserInfo == null ? '' :globals.currentUserInfo.email),
-              currentAccountPicture: CircleAvatar(backgroundImage: NetworkImage(globals.currentUserInfo.pic)),
+              currentAccountPicture: (globals.currentUserInfo.pic.isNotEmpty) ? CircleAvatar(backgroundImage: NetworkImage(globals.currentUserInfo.pic)) 
+              : Icon(
+                Icons.account_circle,
+                color: Colors.grey,
+                size: 80,
+              ),
             ),
             ListTile(
               title: Text('Go to profile'),
               onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => ProfilePage(),
-                  ),
-                );
-                // Navigator.pushNamed(context, '/profile');
+                Navigator.pushNamed(context, '/profile');
               }
             ),
             ListTile(
               title: Text('Go to favorites'),
               onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => FavoritePage(),
-                  ),
-                );
-                //Navigator.pushNamed(context, '/favorite');
+                Navigator.pushNamed(context, '/favorite');
               }
             ),
             ListTile(
               title: Text('Go to applied jobs'),
               onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => AppliedJobsPage(),
-                  ),
-                );
-                // Navigator.pushNamed(context, '/appliedjobs');
+                Navigator.pushNamed(context, '/appliedjobs');
               }
             ),
             ListTile(
