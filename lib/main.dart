@@ -10,6 +10,7 @@ import 'signin_page.dart';
 import 'favorite_page.dart';
 import 'done_page.dart';
 import 'jobdetail_page.dart';
+import 'appliedjobs_page.dart';
 import 'globals.dart' as globals;
 
 void main() => runApp(MyApp());
@@ -36,6 +37,8 @@ class MyApp extends StatelessWidget {
           case '/favorite': MaterialPageRoute(builder: (context) => FavoritePage());
             break;
           case '/done': MaterialPageRoute(builder: (context) => DonePage());
+            break;
+          case '/appliedjobs': MaterialPageRoute(builder: (context) => AppliedJobsPage());
             break;
           default:
         }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:o_jobs/appliedjobs_page.dart';
 import 'package:o_jobs/favorite_page.dart';
 import 'package:o_jobs/globals.dart' as globals;
 
@@ -11,11 +12,6 @@ class BaseAppBar extends StatelessWidget{
               accountName: Text(globals.currentUserInfo == null ? '' :globals.currentUserInfo.name),
               accountEmail: Text(globals.currentUserInfo == null ? '' :globals.currentUserInfo.email),
               currentAccountPicture: CircleAvatar(backgroundImage: NetworkImage(globals.currentUserInfo.pic)),
-              // 
-              // currentUserInfo.email
-              // currentAccountPicture: new CircleAvatar(
-              //   backgroundImage:
-              // )
             ),
             ListTile(
               title: Text('Go to profile'),
@@ -38,7 +34,13 @@ class BaseAppBar extends StatelessWidget{
             ListTile(
               title: Text('Go to applied jobs'),
               onTap: () {
-                Navigator.pushNamed(context, '/applied');
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => AppliedJobsPage(),
+                  ),
+                );
+                // Navigator.pushNamed(context, '/appliedjobs');
               }
             ),
             ListTile(
