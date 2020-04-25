@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:o_jobs/db.dart';
+import 'package:o_jobs/globals.dart' as globals;
 
 enum CV { cv1, cv2 }
 
@@ -19,9 +20,9 @@ class _JobdetailState extends State<JobdetailPage> {
          final cvchoiceRadio = Column(
           children: <Widget>[
             ListTile(
-              title: const Text('Lafayette'),
+              title: const Text('CV 1'),
               leading: Radio(
-                // value: SingingCharacter.lafayette,
+                value: globals.currentUserInfo.cv1,
                 // groupValue: _character,
                 // onChanged: (SingingCharacter value) {
                 //   setState(() { _character = value; });
@@ -29,9 +30,9 @@ class _JobdetailState extends State<JobdetailPage> {
               ),
             ),
             ListTile(
-              title: const Text('Thomas Jefferson'),
+              title: const Text('CV 2'),
               leading: Radio(
-                // value: SingingCharacter.jefferson,
+                value: globals.currentUserInfo.cv2,
                 // groupValue: _character,
                 // onChanged: (SingingCharacter value) {
                 //   setState(() { _character = value; });

@@ -151,7 +151,7 @@ Stream<QuerySnapshot> queryFavoriteList() {
   return getJobList(globals.currentUserInfo.favorite);
 }
 
-Stream<QuerySnapshot>> queryAppliedList(){
+Stream<QuerySnapshot> queryAppliedList(){
   return getJobList(globals.currentUserInfo.applied);
 }
 
