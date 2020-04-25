@@ -17,7 +17,30 @@ class _JobdetailState extends State<JobdetailPage> {
   TextStyle style = TextStyle(fontFamily: 'Roboto', fontSize: 20.0);
   @override
       Widget build(BuildContext context) {
-         final cvchoiceRadio = Column(
+
+        final applyButton = Material(
+          elevation: 5.0,
+          borderRadius: BorderRadius.circular(30.0),
+          color: Theme.of(context).buttonColor,
+          child: MaterialButton(
+            minWidth: MediaQuery.of(context).size.width,
+            padding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
+            onPressed: () => Navigator.pushNamed(context, '/done'),
+            child: Text("Apply",
+                textAlign: TextAlign.center,
+                style: style.copyWith(
+                color: Colors.white, fontWeight: FontWeight.bold)),
+          ),
+        );
+
+        return Scaffold(
+          body: _buildBody(context),
+          floatingActionButton: applyButton,
+          floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+        );
+      }
+      Widget _buildBody(BuildContext context){
+        final cvchoiceRadio = Column(
           children: <Widget>[
             ListTile(
               title: const Text('CV 1'),
@@ -41,28 +64,6 @@ class _JobdetailState extends State<JobdetailPage> {
             ),
           ],
         );
-        final applyButton = Material(
-          elevation: 5.0,
-          borderRadius: BorderRadius.circular(30.0),
-          color: Theme.of(context).buttonColor,
-          child: MaterialButton(
-            minWidth: MediaQuery.of(context).size.width,
-            padding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
-            onPressed: () => Navigator.pushNamed(context, '/done'),
-            child: Text("Apply",
-                textAlign: TextAlign.center,
-                style: style.copyWith(
-                color: Colors.white, fontWeight: FontWeight.bold)),
-          ),
-        );
-
-        return Scaffold(
-          body: _buildBody(context),
-          floatingActionButton: applyButton,
-          floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-        );
-      }
-      Widget _buildBody(BuildContext context){
         return FutureBuilder<Job>(
           future: getJob(widget.id),
           builder: (context, snapshot) {
@@ -71,14 +72,36 @@ class _JobdetailState extends State<JobdetailPage> {
                 padding: EdgeInsets.only(top:21),
                 width: MediaQuery.of(context).size.width,
                 height: MediaQuery.of(context).size.height-200,
-                child: Card(
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: <Widget>[
-                      Text(snapshot.data.name, style: TextStyle(fontSize: 20,backgroundColor: Colors.grey)),
-                      Text(snapshot.data.desc, style: TextStyle(fontSize: 12)),
-                    ],
-                  ),
+                child: Row(
+                  children: <Widget>[
+                    Card(
+                      margin: EdgeInsets.all(12),
+                      elevation: 4,
+                      color: Color.fromRGBO(64, 75, 96, .9),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16),
+                        child: Row(
+                          children: <Widget>[
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisSize: MainAxisSize.min,
+                              children: <Widget>[
+                                Text("Jumping", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                                SizedBox(height: 4),
+                                Text("Activations 9", style: TextStyle(color: Colors.white70)),
+                                Text("03-08-19", style: TextStyle(color: Colors.white70)),
+                                Text(snapshot.data.name, style: TextStyle(fontSize: 20,backgroundColor: Colors.grey)),
+                                Text(snapshot.data.desc, style: TextStyle(fontSize: 12)),
+                              ],
+                            ),
+                            Spacer(),
+                            CircleAvatar(backgroundColor: Colors.white),
+                          ],
+                        ),
+                      ),
+                    ),
+                    cvchoiceRadio,
+                  ],
                 )
               );
             }
