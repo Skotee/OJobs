@@ -4,41 +4,30 @@ import 'package:o_jobs/db.dart';
 
 import 'jobdetail_page.dart';
 
-class AppliedJobsPage extends StatefulWidget {
+class ProfilePage extends StatefulWidget {
   @override
-  _AppliedJobsPageState createState() => _AppliedJobsPageState();
+  _ProfilePageState createState() => _ProfilePageState();
 }
 
-class _AppliedJobsPageState extends State<AppliedJobsPage> {
+class _ProfilePageState extends State<ProfilePage> {
   TextStyle style = TextStyle(fontFamily: 'Roboto', fontSize: 20.0);
   Stream<User> userInfo;
   @override
       Widget build(BuildContext context) {
-
         return Scaffold(
-          body: Row(
-            children: <Widget>[
-              _buildBody(context),
-              RichText(
-                text: TextSpan(
-                  text: 'Applied jobs:',
-                  style: DefaultTextStyle.of(context).style,
-                ),
-              ),
-            ]
-          ),
+          body: _buildBody(context),
           floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
         );
       }
        Widget _buildBody(BuildContext context) {
         return StreamBuilder<QuerySnapshot>(
-          // stream: queryFavoriteList(), //change to another stream
+          stream: queryFavoriteList(),
           builder: (context, snapshot) {
             print(snapshot.data);
             if(!snapshot.hasData) {
               return Center(
-                child: CircularProgressIndicator(),
-              );
+                        child: CircularProgressIndicator(),
+                      );
             }
             return _buildList(context, snapshot.data.documents);
           },
@@ -74,4 +63,5 @@ class _AppliedJobsPageState extends State<AppliedJobsPage> {
           ),
         );
       }
+
 }
