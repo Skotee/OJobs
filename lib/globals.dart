@@ -16,5 +16,14 @@ void update() async {
     var gsReference = await FirebaseStorage.instance.getReferenceFromUrl(currentUserInfo.pic);
     currentUserInfo.pic = await gsReference.getDownloadURL();
   }
+  if(currentUserInfo.cv1.isNotEmpty){
+    var gsReference = await FirebaseStorage.instance.getReferenceFromUrl(currentUserInfo.cv1);
+    currentUserInfo.cv1 = await gsReference.getDownloadURL();
+  }
+  if(currentUserInfo.cv2.isNotEmpty){
+    var gsReference = await FirebaseStorage.instance.getReferenceFromUrl(currentUserInfo.cv2);
+    currentUserInfo.cv2 = await gsReference.getDownloadURL();
+  }
   isLogin = true;
 }
+

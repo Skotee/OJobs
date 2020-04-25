@@ -22,18 +22,21 @@ class BaseAppBar extends StatelessWidget{
             ListTile(
               title: Text('Go to profile'),
               onTap: () {
+                Navigator.pop(context);
                 Navigator.pushNamed(context, '/profile');
               }
             ),
             ListTile(
               title: Text('Go to favorites'),
               onTap: () {
+                Navigator.pop(context);
                 Navigator.pushNamed(context, '/favorite');
               }
             ),
             ListTile(
               title: Text('Go to applied jobs'),
               onTap: () {
+                Navigator.pop(context);
                 Navigator.pushNamed(context, '/appliedjobs');
               }
             ),

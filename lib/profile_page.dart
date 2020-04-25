@@ -1,7 +1,13 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:image_cropper/image_cropper.dart';
 import 'package:o_jobs/db.dart';
 import 'package:o_jobs/globals.dart' as globals;
+
+import 'menu_bar.dart';
 
 class ProfilePage extends StatefulWidget {
   @override
@@ -14,6 +20,7 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
       Widget build(BuildContext context) {
         return Scaffold(
+          drawer: BaseAppBar(),
           body: _buildBody(context),
           floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
         );
@@ -118,5 +125,32 @@ class _ProfilePageState extends State<ProfilePage> {
             }
           },
         ); */
+      }
+
+      Future _selectProfilePicture() async {
+        String path = await FilePicker.getFilePath(type: FileType.image);
+        File file = await ImageCropper.cropImage(
+          sourcePath: path,
+          aspectRatioPresets: [CropAspectRatioPreset.square],
+          cropStyle: CropStyle.circle,
+          androidUiSettings: AndroidUiSettings(
+          toolbarColor: Theme.of(context).backgroundColor,
+          toolbarWidgetColor: Colors.white,
+          initAspectRatio: CropAspectRatioPreset.square,
+          lockAspectRatio: true),
+        );
+        if(file != null)
+          uploadFile('pic', file, globals.currentUser.uid);
+      }
+
+      Future _selectCV(bool choice) async {
+        File file = await FilePicker.getFile(type: FileType.custom, allowedExtensions: ['docx', 'pdf']);
+        if(file != null){
+          if(choice)
+            uploadFile('cv1', file, globals.currentUser.uid);
+          else
+            uploadFile('cv2', file, globals.currentUser.uid);
+        }
+         
       }
 }

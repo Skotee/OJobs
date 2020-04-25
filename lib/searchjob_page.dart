@@ -1,7 +1,11 @@
+import 'dart:io';
+
+import 'package:file_picker/file_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
+import 'package:image_cropper/image_cropper.dart';
 import 'package:location/location.dart';
 import 'package:o_jobs/db.dart';
 
@@ -17,6 +21,7 @@ class SearchPage extends StatefulWidget {
 
 class _SearchPageState extends State<SearchPage> {
   TextStyle style = TextStyle(fontFamily: 'Roboto', fontSize: 20.0);
+  final _scaffoldKey = GlobalKey<ScaffoldState>();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController _whatjobController = TextEditingController();
   final TextEditingController _wherejobController = TextEditingController();
@@ -36,7 +41,7 @@ class _SearchPageState extends State<SearchPage> {
           controller: _whatjobController,
           validator: (String value) {
             if (value.isEmpty) {
-              return "Please enter job' name you're looking for";
+              return "Please enter job's name you're looking for";
             }
             return null;
           },
@@ -51,7 +56,7 @@ class _SearchPageState extends State<SearchPage> {
           controller: _wherejobController,
           validator: (String value) {
             if (value.isEmpty) {
-              return "Please enter job' localization you're looking for";
+              return "Your location will be used";
             }
             return null;
           },
@@ -83,19 +88,20 @@ class _SearchPageState extends State<SearchPage> {
                     color: Colors.white, fontWeight: FontWeight.bold)),
           ),
         );
-        final addButton = ClipOval(
+        /*final addButton = ClipOval(
           child: Material(
             color: Colors.blue, // button color
             child: InkWell(
               splashColor: Colors.red, // inkwell color
               child: SizedBox(width: 56, height: 56, child: Icon(Icons.add_circle)),
               onTap: () {
-                Job(name:'IOS Dev',desc:'Lorem Ipsum',position:GeoPoint(65.059374, 25.467033),skillList:['IOS','Swift','flutter']).toFirestore();
+                //Job(name:'IOS Dev',desc:'Lorem Ipsum',position:GeoPoint(65.059374, 25.467033),skillList:['IOS','Swift','flutter']).toFirestore();
               },
             ),
           ),
-        );
+        );*/
         return Scaffold(
+          key:_scaffoldKey,
           drawer: BaseAppBar(),
           body: Form(
             key: _formKey,
@@ -116,9 +122,8 @@ class _SearchPageState extends State<SearchPage> {
                      isLoading ? Center(
                         child: CircularProgressIndicator(),
                       ) : searchButton,
-                    SizedBox(height: 30.0),
-                    SizedBox(height: 20.0),
-                    addButton
+                    SizedBox(height: 50.0),
+                    //addButton
                   ],
                 ),
               ),
@@ -137,9 +142,11 @@ class _SearchPageState extends State<SearchPage> {
     try {
       placemark = await Geolocator().placemarkFromAddress(_wherejobController.text);
     } catch (e) {
-      print(e);
+      _scaffoldKey.currentState
+            .showSnackBar(SnackBar(content: Text("Can't find the localization. Your location will be used"),));
       var pos = await Location().getLocation();
       placemark.add(Placemark(position: Position(latitude: pos.latitude,longitude: pos.longitude)));
+      await Future.delayed(Duration(seconds: 3));
     }
     isLoading = false;
     Navigator.push(

@@ -33,6 +33,8 @@ dependencies:
   fluttertoast: ^4.0.1
   geoflutterfire: ^2.1.0
   google_maps_flutter: ^0.5.25+3
+  image_cropper: ^1.2.1
+  file_picker: ^1.6.3+2
   rxdart: ^0.23.1
   location: ^3.0.2
   geolocator: ^5.3.1

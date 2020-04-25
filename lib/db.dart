@@ -24,6 +24,8 @@ Future<User> getUser(String id){
   });
 }
 
+
+
 class User {
   String name;
   String lastname;
@@ -88,38 +90,30 @@ class Job {
     Firestore.instance.collection('JOBS').add({
       'name': this.name,
       'desc': this.desc,
-      'key_term': this.name.split(" "),
-      'position': Geoflutterfire().point(latitude: this.position.latitude, longitude: this.position.longitude),
+      'key_term': this.name.toUpperCase().split(" "),
+      'position': Geoflutterfire().point(latitude: this.position.latitude, longitude: this.position.longitude).data,
       'skill_list': skillList
     });
   }
 }
 
-Future uploadFile(String path, String name, File img, String id) async {
-  StorageReference reference = FirebaseStorage.instance.ref().child(path);
-  if(path == 'CV1' || path == 'CV2')
-    reference = FirebaseStorage.instance.ref().child('CV');
-
+void uploadFile(String path, File img, String id) async {
+  StorageReference reference = FirebaseStorage.instance.ref().child(path).child(id);
   StorageUploadTask uploadTask = reference.putFile(img);
-  StorageTaskSnapshot storageTaskSnapshot;
-  uploadTask.onComplete.then((onValue) {
-    if(onValue.error == null)
-    {
-      storageTaskSnapshot = onValue;
-      storageTaskSnapshot.ref.getDownloadURL().then((url) {
-        Firestore.instance
-        .collection('USER')
-        .document(id)
-        .updateData({path:url});
-      });
-    }
-    else
-    {
-      Fluttertoast.showToast(msg: 'This file is not an image');
-    }
-  },onError: (err){
-    Fluttertoast.showToast(msg: err.toString());
-  });
+  StorageTaskSnapshot storageTaskSnapshot = await uploadTask.onComplete;
+  if(storageTaskSnapshot.error == null)
+  {
+    String url = 'gs://'+await storageTaskSnapshot.ref.getBucket()+'/'+await storageTaskSnapshot.ref.getPath();
+    Firestore.instance
+      .collection('USER')
+      .document(id)
+      .updateData({path:url});
+    globals.update();
+  }
+  else
+  {
+    Fluttertoast.showToast(msg: 'Error will uploading the file');
+  }
 }
 
 Future<List<Job>> queryJob({List<String> terms, List<String> skills, GeoPoint coord}) async {
@@ -166,7 +160,7 @@ Stream<QuerySnapshot> queryAppliedList(){
 }
 
 Stream<List<DocumentSnapshot>> queryGeoKeyJob(String name, double lat, double long) {
-  var terms = name.split(" ");
+  var terms = name.toUpperCase().split(" ");
   GeoFirePoint center = Geoflutterfire().point(latitude: lat, longitude: long);
   var collectionReference = Firestore.instance.collection('JOBS').where('key_term',arrayContainsAny: terms);
   var searchRef = Geoflutterfire().collection(collectionRef: collectionReference).within(

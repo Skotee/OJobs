@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:o_jobs/db.dart';
 import 'package:o_jobs/globals.dart' as globals;
 
+import 'menu_bar.dart';
+
 enum CV { cv1, cv2 }
 
 class JobdetailPage extends StatefulWidget {
@@ -25,7 +27,14 @@ class _JobdetailState extends State<JobdetailPage> {
           child: MaterialButton(
             minWidth: MediaQuery.of(context).size.width,
             padding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
-            onPressed: () => Navigator.pushNamed(context, '/done'),
+            onPressed: () {
+              globals.currentUserInfo.applied.add(widget.id);
+              Firestore.instance
+                .collection('USER')
+                .document(widget.id)
+                .updateData({'applied':globals.currentUserInfo.applied});
+              Navigator.pushReplacementNamed(context, '/done');
+            },
             child: Text("Apply",
                 textAlign: TextAlign.center,
                 style: style.copyWith(
@@ -34,6 +43,7 @@ class _JobdetailState extends State<JobdetailPage> {
         );
 
         return Scaffold(
+          drawer: BaseAppBar(),
           body: _buildBody(context),
           floatingActionButton: applyButton,
           floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,

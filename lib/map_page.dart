@@ -6,6 +6,8 @@ import 'package:geoflutterfire/src/point.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
+import 'jobdetail_page.dart';
+
 class MapPage extends StatefulWidget {
   final double lat;
   final double long;
@@ -48,7 +50,17 @@ class _MapPageState extends State<MapPage> {
           markerId: MarkerId(job.id),
           position: LatLng(job.position.latitude,job.position.longitude),
           icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueViolet),
-          onTap: () => print(job.id),
+          infoWindow: InfoWindow(
+            title:job.name,
+            snippet:job.desc,
+            onTap: () => Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => JobdetailPage(id: job.id),
+              ),
+            ),
+          ),
+          
         ),
       );
     });
@@ -57,6 +69,8 @@ class _MapPageState extends State<MapPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      floatingActionButton: IconButton(padding:EdgeInsets.only(top:100),icon: Icon(Icons.arrow_back,size: 40),color: Colors.black, onPressed: () => Navigator.pop(context)),
+      floatingActionButtonLocation: FloatingActionButtonLocation.miniStartTop,
         body: GoogleMap(
           onMapCreated: _onMapCreated,
           myLocationEnabled: true,

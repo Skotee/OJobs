@@ -243,7 +243,7 @@ class _RegisterPageState extends State<RegisterPage> {
           'adress': _addressController.text,
           'country': _countryController.text,
           'createdAt': DateTime.now(),
-          'picUrl': '',
+          'pic': '',
           'CV1': '',
           'CV2': '',
           'favorite': List<String>(),

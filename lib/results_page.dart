@@ -2,7 +2,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:o_jobs/db.dart';
 import './map_page.dart';
+import 'globals.dart' as globals;
 import 'jobdetail_page.dart';
+import 'menu_bar.dart';
 
 class ResultsPage extends StatefulWidget {
   final double lat;
@@ -39,6 +41,15 @@ class _ResultsPageState extends State<ResultsPage> {
         );
 
         return Scaffold(
+          drawer: BaseAppBar(),
+          appBar: AppBar(centerTitle: true,
+            title: RichText(
+              text: TextSpan(
+                text: 'Search result',
+                style: style,
+              ),
+            ),
+          ),
           body: _buildBody(context),
           floatingActionButton: goToMapButton,
           floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
@@ -48,11 +59,10 @@ class _ResultsPageState extends State<ResultsPage> {
         return StreamBuilder<List<DocumentSnapshot>>(
           stream: queryGeoKeyJob(widget.term,widget.lat,widget.long),
           builder: (context, snapshot) {
-            print(snapshot.data);
             if(!snapshot.hasData) {
               return Center(
-                        child: CircularProgressIndicator(),
-                      );
+                child: CircularProgressIndicator(),
+              );
             }
             return _buildList(context, snapshot.data);
           },
@@ -61,32 +71,48 @@ class _ResultsPageState extends State<ResultsPage> {
        Widget _buildList(BuildContext context, List<DocumentSnapshot> snapshot) {
         return ListView(
           padding: const EdgeInsets.only(top: 20.0),
-          children: snapshot.map((data) => _buildListItem(context, data)).toList(),
+          children: ListTile.divideTiles(
+            color: Colors.white,
+            context:context,
+            tiles: snapshot.map((data) => _buildListItem(context, data)).toList()).toList(),
         );
       }
        Widget _buildListItem(BuildContext context, DocumentSnapshot data) {
         final job = Job.fromSnapshot(data);
-
-        return Padding(
-          key: ValueKey(job.name),
-          padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-          child: Container(
-            decoration: BoxDecoration(
-              border: Border.all(color: Colors.grey),
-              borderRadius: BorderRadius.circular(5.0),
-            ),
-            child: ListTile(
+        bool fav = globals.currentUserInfo.favorite.contains(job.id);
+        bool app = globals.currentUserInfo.applied.contains(job.id);
+        return ListTile(
+              leading: app ? Icon(Icons.check,color: Colors.grey,):null,
               title: Text(job.name),
-              trailing: Text(job.desc),
+              subtitle: Text(job.desc),
+              trailing: fav ?
+                IconButton(icon:Icon(Icons.favorite),color: Colors.grey,
+                onPressed: (){
+                  setState(() {
+                    globals.currentUserInfo.favorite.remove(job.id);
+                  });
+                  Firestore.instance
+                    .collection('USER')
+                    .document(globals.currentUser.uid)
+                    .updateData({'favorite':globals.currentUserInfo.favorite});
+                },)
+                :IconButton(icon:Icon(Icons.favorite_border),color: Colors.grey,
+                onPressed: (){
+                  setState(() {
+                    globals.currentUserInfo.favorite.add(job.id);
+                  });
+                  Firestore.instance
+                    .collection('USER')
+                    .document(globals.currentUser.uid)
+                    .updateData({'favorite':globals.currentUserInfo.favorite});
+                },),
               onTap: () => Navigator.push(
                 context,
                 MaterialPageRoute(
                   builder: (context) => JobdetailPage(id: job.id),
                 ),
               ),
-            ),
-          ),
-        );
+            );
       }
 
 }
