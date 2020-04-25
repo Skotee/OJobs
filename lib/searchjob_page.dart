@@ -90,7 +90,7 @@ class _SearchPageState extends State<SearchPage> {
               splashColor: Colors.red, // inkwell color
               child: SizedBox(width: 56, height: 56, child: Icon(Icons.add_circle)),
               onTap: () {
-                Job(name:'IOS Dev',desc:'Lorem Ipsum',position:Geoflutterfire().point(latitude: 65.059374, longitude: 25.467033),skillList:['IOS','Swift','flutter']).toFirestore();
+                Job(name:'IOS Dev',desc:'Lorem Ipsum',position:GeoPoint(65.059374, 25.467033),skillList:['IOS','Swift','flutter']).toFirestore();
               },
             ),
           ),

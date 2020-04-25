@@ -74,14 +74,14 @@ class Job {
   String id;
   String name;
   String desc;
-  GeoFirePoint position;
+  GeoPoint position;
   List<dynamic> skillList;
   Job({this.name,this.desc,this.position,this.skillList});
   Job.fromSnapshot(DocumentSnapshot snapshot):
     id = snapshot.documentID,
     name = snapshot['name'],
     desc = snapshot['desc'],
-    position = snapshot['position'],
+    position = snapshot['position']['geopoint'],
     skillList = snapshot['skill_list'];
 
   toFirestore(){
@@ -89,7 +89,7 @@ class Job {
       'name': this.name,
       'desc': this.desc,
       'key_term': this.name.split(" "),
-      'position': this.position.data,
+      'position': Geoflutterfire().point(latitude: this.position.latitude, longitude: this.position.longitude),
       'skill_list': skillList
     });
   }

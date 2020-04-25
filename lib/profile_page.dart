@@ -51,10 +51,10 @@ class _ProfilePageState extends State<ProfilePage> {
           ]
           )
         );
-        return FutureBuilder<User>(
+        /* return FutureBuilder<User>(
           future: getUser(globals.currentUser.uid),
           builder: (context, snapshot) {
-            if(snapshot.connectionState == ConnectionState.done){
+            if(snapshot.connectionState == ConnectionState.done){ */
               return Container(
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
@@ -74,7 +74,12 @@ class _ProfilePageState extends State<ProfilePage> {
                           ),
                           Expanded(
                             flex: 3,
-                            child: CircleAvatar(backgroundImage: NetworkImage(globals.currentUserInfo.pic)),
+                            child: (globals.currentUserInfo.pic.isNotEmpty) ? CircleAvatar(backgroundImage: NetworkImage(globals.currentUserInfo.pic)) 
+                            : Icon(
+                              Icons.account_circle,
+                              color: Colors.grey,
+                              size: 80,
+                            ),
                           ),
                         ]
                       ),
@@ -105,13 +110,13 @@ class _ProfilePageState extends State<ProfilePage> {
                   ],
                 ),
                 );
-            }
+            /* }
             else {
               return Center(
                 child: CircularProgressIndicator(),
               );
             }
           },
-        );
+        ); */
       }
 }

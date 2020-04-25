@@ -29,19 +29,19 @@ class MyApp extends StatelessWidget {
       ),
       onGenerateRoute: (settings){
         switch (settings.name) {
-          case '/login': MaterialPageRoute(builder: (context) => LoginPage());
+          case '/login': return MaterialPageRoute(builder: (context) => LoginPage());
             break;
-          case '/register': MaterialPageRoute(builder: (context) => RegisterPage());
+          case '/register': return MaterialPageRoute(builder: (context) => RegisterPage());
             break;
-          case '/search': MaterialPageRoute(builder: (context) => SearchPage());
+          case '/search': return MaterialPageRoute(builder: (context) => SearchPage());
             break;
-          case '/favorite': MaterialPageRoute(builder: (context) => FavoritePage());
+          case '/favorite': return MaterialPageRoute(builder: (context) => FavoritePage());
             break;
-          case '/done': MaterialPageRoute(builder: (context) => DonePage());
+          case '/done': return MaterialPageRoute(builder: (context) => DonePage());
             break;
-          case '/appliedjobs': MaterialPageRoute(builder: (context) => AppliedJobsPage());
+          case '/appliedjobs': return MaterialPageRoute(builder: (context) => AppliedJobsPage());
             break;
-          case '/profile': MaterialPageRoute(builder: (context) => ProfilePage());
+          case '/profile': return MaterialPageRoute(builder: (context) => ProfilePage());
             break;
           default:
         }

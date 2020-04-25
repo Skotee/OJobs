@@ -243,11 +243,11 @@ class _RegisterPageState extends State<RegisterPage> {
           'adress': _addressController.text,
           'country': _countryController.text,
           'createdAt': DateTime.now(),
-          'picUrl': null,
-          'CV1': null,
-          'CV2': null,
-          'favorite': null,
-          'applied': null
+          'picUrl': '',
+          'CV1': '',
+          'CV2': '',
+          'favorite': List<String>(),
+          'applied': List<String>()
         });
         Scaffold.of(context)
           .showSnackBar(SnackBar(content: Text('Successfully registered')));
