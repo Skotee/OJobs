@@ -11,7 +11,6 @@ class AppliedJobsPage extends StatefulWidget {
 
 class _AppliedJobsPageState extends State<AppliedJobsPage> {
   TextStyle style = TextStyle(fontFamily: 'Roboto', fontSize: 20.0);
-  Stream<User> userInfo;
   @override
       Widget build(BuildContext context) {
 
@@ -32,7 +31,7 @@ class _AppliedJobsPageState extends State<AppliedJobsPage> {
       }
        Widget _buildBody(BuildContext context) {
         return StreamBuilder<QuerySnapshot>(
-          // stream: queryFavoriteList(), //change to another stream
+          stream: queryAppliedList(),
           builder: (context, snapshot) {
             print(snapshot.data);
             if(!snapshot.hasData) {
