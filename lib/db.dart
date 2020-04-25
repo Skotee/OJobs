@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -148,6 +149,10 @@ Future<List<Job>> queryJob({List<String> terms, List<String> skills, GeoPoint co
 
 Stream<QuerySnapshot> queryFavoriteList() {
   return getJobList(globals.currentUserInfo.favorite);
+}
+
+Stream<QuerySnapshot>> queryAppliedList(){
+  return getJobList(globals.currentUserInfo.applied);
 }
 
 Stream<List<DocumentSnapshot>> queryGeoKeyJob(String name, double lat, double long) {
