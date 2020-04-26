@@ -29,7 +29,7 @@ class _ProfilePageState extends State<ProfilePage> {
         final emailField = RichText(
           text: TextSpan(
             children: <TextSpan>[
-              TextSpan(text: 'Email', style: TextStyle(fontSize: 20)),
+              TextSpan(text: 'Email: ', style: TextStyle(fontSize: 20)),
               TextSpan(text: globals.currentUserInfo.email, style: TextStyle(fontSize: 20)),
           ]
           )
@@ -37,7 +37,7 @@ class _ProfilePageState extends State<ProfilePage> {
         final phoneField = RichText(
           text: TextSpan(
             children: <TextSpan>[
-              TextSpan(text: 'Mobile phone number', style: TextStyle(fontSize: 20)),
+              TextSpan(text: 'Mobile phone number: ', style: TextStyle(fontSize: 20)),
               TextSpan(text: globals.currentUserInfo.mobile, style: TextStyle(fontSize: 20)),
           ]
           )
@@ -45,7 +45,7 @@ class _ProfilePageState extends State<ProfilePage> {
         final addressField = RichText(
           text: TextSpan(
             children: <TextSpan>[
-              TextSpan(text: 'Address', style: TextStyle(fontSize: 20)),
+              TextSpan(text: 'Address: ', style: TextStyle(fontSize: 20)),
               TextSpan(text: globals.currentUserInfo.adress, style: TextStyle(fontSize: 20)),
           ]
           )
@@ -53,7 +53,7 @@ class _ProfilePageState extends State<ProfilePage> {
         final countryField = RichText(
           text: TextSpan(
             children: <TextSpan>[
-              TextSpan(text: 'Country', style: TextStyle(fontSize: 20)),
+              TextSpan(text: 'Country: ', style: TextStyle(fontSize: 20)),
               TextSpan(text: globals.currentUserInfo.country, style: TextStyle(fontSize: 20)),
           ]
           )
@@ -62,71 +62,104 @@ class _ProfilePageState extends State<ProfilePage> {
           future: getUser(globals.currentUser.uid),
           builder: (context, snapshot) {
             if(snapshot.connectionState == ConnectionState.done){ */
-              return Container(
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                      Row(
-                        children: <Widget>[
-                          Expanded(
-                            flex: 3,
-                            child:  RichText(
-                              text: TextSpan(
-                                children: <TextSpan>[
-                                  TextSpan(text: globals.currentUserInfo.name, style: TextStyle(fontSize: 20)),
-                                  TextSpan(text: globals.currentUserInfo.lastname.toUpperCase(), style: TextStyle(fontSize: 30)),
-                              ]
-                              )
-                            ),
-                          ),
-                          Expanded(
-                            flex: 3,
-                            child: (globals.currentUserInfo.pic.isNotEmpty) ? CircleAvatar(backgroundImage: NetworkImage(globals.currentUserInfo.pic)) 
-                            : Icon(
-                              Icons.account_circle,
-                              color: Colors.grey,
-                              size: 80,
-                            ),
-                          ),
-                        ]
+          return Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        globals.currentUserInfo.name,
+                        style: Theme.of(context).textTheme.headline,
                       ),
-                      Row(
-                      children: <Widget>[
-                        Expanded(
-                          flex: 3,
-                          child: Container(
-                            color: Colors.green,
-                          ),
-                        ),
-                        Expanded(
-                          flex: 3,
-                          child: Container(
-                            color: Colors.yellow,
-                          ),
-                        ),
-                      ],
+                      Text(
+                        globals.currentUserInfo.lastname.toUpperCase(),
+                      )
+                    ],
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(60, 1, 20, 1),
+                     child: (globals.currentUserInfo.pic.isNotEmpty) ?
+                     CircleAvatar(
+                       backgroundImage: NetworkImage(globals.currentUserInfo.pic)
+                       )
+                        : Icon(
+                          Icons.account_circle,
+                          color: Colors.grey,
+                          size: 150,
                     ),
-                    Row(
-                      children: <Widget> [
-                        emailField,
-                        phoneField,
-                        addressField,
-                        countryField
-                      ]
-                    )
-                  ],
-                ),
-                );
-            /* }
-            else {
-              return Center(
-                child: CircularProgressIndicator(),
-              );
-            }
-          },
-        ); */
-      }
+                  ),
+                ],
+              ),
+              SizedBox(height: 8),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  Column(
+                    children: [
+                      Icon(Icons.card_giftcard, color: Colors.green[500]),
+                      Text('CV 1'),
+                      FlatButton(
+                        child: const Text('EDIT'),
+                        onPressed: () { /* ... */ },
+                      ),
+                    ],
+                  ),
+                  Column(
+                    children: [
+                      Icon(Icons.card_travel, color: Colors.green[500]),
+                      Text('CV 2'),
+                      FlatButton(
+                      child: const Text('EDIT'),
+                      onPressed: () { /* ... */ },
+                    ),
+                    ],
+                  ),
+                ],
+              ),
+              SizedBox(height: 16),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: <Widget>[
+                  emailField
+                ],
+              ),
+              SizedBox(height: 16),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: <Widget>[
+                  phoneField
+                ],
+              ),
+              SizedBox(height: 16),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: <Widget>[
+                  addressField
+                ],
+              ),
+              SizedBox(height: 16),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: <Widget>[
+                  countryField
+                ],
+              ),
+            ],
+            
+          );
+            // else {
+            //   return Center(
+            //     child: CircularProgressIndicator(),
+            //   );
+            // }
 
+      }
       Future _selectProfilePicture() async {
         String path = await FilePicker.getFilePath(type: FileType.image);
         File file = await ImageCropper.cropImage(

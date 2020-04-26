@@ -175,8 +175,6 @@ class _RegisterPageState extends State<RegisterPage> {
                     color: Colors.white, fontWeight: FontWeight.bold)),
           ),
         );
-
-
         return Scaffold(
           body: Form(
             key: _formKey,
