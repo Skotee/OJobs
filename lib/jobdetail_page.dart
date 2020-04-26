@@ -19,98 +19,101 @@ class JobdetailPage extends StatefulWidget {
 class _JobdetailState extends State<JobdetailPage> {
   TextStyle style = TextStyle(fontFamily: 'Roboto', fontSize: 20.0);
   @override
-      Widget build(BuildContext context) {
-
-        final applyButton = Material(
-          elevation: 5.0,
-          borderRadius: BorderRadius.circular(30.0),
-          color: Theme.of(context).buttonColor,
-          child: MaterialButton(
-            minWidth: MediaQuery.of(context).size.width,
-            padding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
-            onPressed: () {
-              globals.currentUserInfo.applied.add(widget.id);
-              Firestore.instance
+  Widget build(BuildContext context) {
+    bool app = globals.currentUserInfo.applied.contains(widget.id);
+    final applyButton = Material(
+      elevation: 5.0,
+      borderRadius: BorderRadius.circular(30.0),
+      color: Theme.of(context).buttonColor,
+      child: MaterialButton(
+        minWidth: MediaQuery.of(context).size.width,
+        padding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
+        onPressed: () {
+          if(!app){
+            globals.currentUserInfo.applied.add(widget.id);
+            Firestore.instance
                 .collection('USER')
-                .document(widget.id)
-                .updateData({'applied':globals.currentUserInfo.applied});
-              Navigator.pushReplacementNamed(context, '/done');
-            },
-            child: Text("Apply",
-                textAlign: TextAlign.center,
-                style: style.copyWith(
+                .document(globals.currentUser.uid)
+                .updateData({'applied': globals.currentUserInfo.applied});
+            Navigator.pushReplacementNamed(context, '/done');
+          }
+        },
+        child: Text(app?'Already applied to this Job':"Apply",
+            textAlign: TextAlign.center,
+            style: style.copyWith(
                 color: Colors.white, fontWeight: FontWeight.bold)),
-          ),
-        );
+      ),
+    );
 
-        return Scaffold(
-          drawer: BaseAppBar(),
-          body: _buildBody(context),
-          floatingActionButton: applyButton,
-          floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-        );
-      }
-      Widget _buildBody(BuildContext context){
-        final cvchoiceRadio = Column(
-          children: <Widget>[
-            ListTile(
-              title: const Text('CV 1'),
-              leading: Radio(
-                autofocus: true,
-                value: globals.currentUserInfo.cv1,
-                groupValue: groupcv,
-                // onChanged: (CV value) {
-                //   setState(() { groupcv = value; });
-                // },
-              ),
-            ),
-            ListTile(
-              title: const Text('CV 2'),
-              leading: Radio(
-                value: globals.currentUserInfo.cv2,
-                groupValue: groupcv,
-                // onChanged: (CV value) {
-                //   setState(() { groupcv = value; });
-                // },
-              ),
-            ),
-          ],
-        );
-        return FutureBuilder<Job>(
-          future: getJob(widget.id),
-          builder: (context, snapshot) {
-            if(snapshot.connectionState == ConnectionState.done){
-              return Column(
-                children: [
-                  Card(
-                    margin: EdgeInsets.only(top:32),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: <Widget>[
-                        ListTile(
-                          leading: Icon(Icons.album, size: 50),
-                          title: Text(snapshot.data.name),
-                          subtitle: Text(snapshot.data.desc),
-                        ),
-                        // ListView(
-                        //     children: ListTile.divideTiles(
-                        //       tiles: snapshot.data.skillList.map((data) => Text(data))
-                        //   ),
-                        // ),
-                    ],
+    return Scaffold(
+      drawer: BaseAppBar(),
+      body: _buildBody(context),
+      floatingActionButton: applyButton,
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+    );
+  }
+
+  Widget _buildBody(BuildContext context) {
+    final cvchoiceRadio = Column(
+      children: <Widget>[
+        RadioListTile(
+            title: const Text('CV 1'),
+            value: CV.cv1,
+            groupValue: groupcv,
+            onChanged: (CV value) {
+              setState(() {
+                groupcv = value;
+              });
+            }),
+        RadioListTile(
+            title: const Text('CV 2'),
+            value: CV.cv2,
+            groupValue: groupcv,
+            onChanged: (CV value) {
+              setState(() {
+                groupcv = value;
+              });
+            }),
+      ],
+    );
+
+    return FutureBuilder<Job>(
+      future: getJob(widget.id),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.done) {
+          return Column(children: [
+            Card(
+              margin: EdgeInsets.only(top: 32),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  ListTile(
+                    leading: Icon(Icons.album, size: 50),
+                    title: Text(snapshot.data.name),
+                    subtitle: Text(snapshot.data.desc),
                   ),
-                ),
-                SizedBox(height: 15),
-                cvchoiceRadio,
-                ]
-              );
-            }
-            else {
-              return Center(
-                child: CircularProgressIndicator(),
-              );
-            }
-          },
-        );
-      }
+                  Wrap(
+                    children: snapshot.data.skillList.map((skill) {
+                      return Chip(
+                        avatar: Icon(Icons.featured_play_list,
+                            color: Theme.of(context).buttonColor),
+                        label: Text(skill.toString()),
+                      );
+                    }).toList(),
+                    spacing: 4,
+                  )
+                ],
+              ),
+            ),
+            SizedBox(height: 15),
+            cvchoiceRadio,
+          ]);
+        } else {
+          return Center(
+            child: CircularProgressIndicator(),
+          );
+        }
+      },
+    );
+  }
 }

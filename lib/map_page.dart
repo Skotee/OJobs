@@ -12,7 +12,7 @@ class MapPage extends StatefulWidget {
   final double lat;
   final double long;
   final String term;
-  MapPage({@required this.term, @required this.lat,@required this.long});
+  MapPage({@required this.term, @required this.lat, @required this.long});
   @override
   _MapPageState createState() => _MapPageState();
 }
@@ -22,10 +22,10 @@ class _MapPageState extends State<MapPage> {
   GoogleMapController mapController;
   Stream<List<DocumentSnapshot>> stream;
 
-@override
+  @override
   void initState() {
     super.initState();
-    stream = queryGeoKeyJob(widget.term,widget.lat,widget.long);
+    stream = queryGeoKeyJob(widget.term, widget.lat, widget.long);
   }
 
   void _onMapCreated(GoogleMapController controller) {
@@ -48,11 +48,12 @@ class _MapPageState extends State<MapPage> {
       _markers.add(
         Marker(
           markerId: MarkerId(job.id),
-          position: LatLng(job.position.latitude,job.position.longitude),
-          icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueViolet),
+          position: LatLng(job.position.latitude, job.position.longitude),
+          icon:
+              BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueViolet),
           infoWindow: InfoWindow(
-            title:job.name,
-            snippet:job.desc,
+            title: job.name,
+            snippet: job.desc,
             onTap: () => Navigator.push(
               context,
               MaterialPageRoute(
@@ -60,7 +61,6 @@ class _MapPageState extends State<MapPage> {
               ),
             ),
           ),
-          
         ),
       );
     });
@@ -69,19 +69,24 @@ class _MapPageState extends State<MapPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      floatingActionButton: IconButton(padding:EdgeInsets.only(top:100),icon: Icon(Icons.arrow_back,size: 40),color: Colors.black, onPressed: () => Navigator.pop(context)),
+      floatingActionButton: IconButton(
+          padding: EdgeInsets.only(top: 100),
+          icon: Icon(Icons.arrow_back, size: 40),
+          color: Colors.black,
+          onPressed: () => Navigator.pop(context)),
       floatingActionButtonLocation: FloatingActionButtonLocation.miniStartTop,
-        body: GoogleMap(
-          onMapCreated: _onMapCreated,
-          myLocationEnabled: true,
-          initialCameraPosition: CameraPosition(
-            target: LatLng(widget.lat,widget.long),
-            zoom: 11.0,
-          ),
-          markers: Set<Marker>.of(_markers),
+      body: GoogleMap(
+        onMapCreated: _onMapCreated,
+        myLocationEnabled: true,
+        initialCameraPosition: CameraPosition(
+          target: LatLng(widget.lat, widget.long),
+          zoom: 11.0,
         ),
+        markers: Set<Marker>.of(_markers),
+      ),
     );
   }
+
   @override
   void dispose() {
     super.dispose();
