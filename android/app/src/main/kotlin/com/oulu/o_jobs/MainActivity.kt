@@ -1,4 +1,4 @@
-package com.example.o_jobs
+package com.oulu.o_jobs
 
 import androidx.annotation.NonNull;
 import io.flutter.embedding.android.FlutterActivity
