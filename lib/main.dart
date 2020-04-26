@@ -1,15 +1,10 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'results_page.dart';
 import 'register_page.dart';
 import 'searchjob_page.dart';
-import 'db.dart';
-import 'map_page.dart';
 import 'signin_page.dart';
 import 'favorite_page.dart';
 import 'done_page.dart';
-import 'jobdetail_page.dart';
 import 'appliedjobs_page.dart';
 import 'profile_page.dart';
 import 'globals.dart' as globals;

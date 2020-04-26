@@ -1,18 +1,11 @@
-import 'dart:io';
-
-import 'package:file_picker/file_picker.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:geoflutterfire/geoflutterfire.dart';
-import 'package:image_cropper/image_cropper.dart';
 import 'package:location/location.dart';
 import 'package:o_jobs/db.dart';
 
 import 'package:geolocator/geolocator.dart';
 import 'menu_bar.dart';
 import 'results_page.dart';
-import 'globals.dart' as globals;
 
 class SearchPage extends StatefulWidget {
   @override
@@ -94,7 +87,7 @@ class _SearchPageState extends State<SearchPage> {
           splashColor: Colors.red, // inkwell color
           child: SizedBox(width: 56, height: 56, child: Icon(Icons.add_circle)),
           onTap: () {
-            //Job(name:'IOS Dev',desc:'Lorem Ipsum',position:GeoPoint(65.059374, 25.467033),skillList:['IOS','Swift','flutter']).toFirestore();
+            Job(name:'IOS Dev',desc:'Lorem Ipsum',position:GeoPoint(65.059374, 25.467033),skillList:['IOS','Swift','flutter']).toFirestore();
           },
         ),
       ),
@@ -124,7 +117,7 @@ class _SearchPageState extends State<SearchPage> {
                       )
                     : searchButton,
                 SizedBox(height: 50.0),
-                //addButton
+                addButton
               ],
             ),
           ),

@@ -182,9 +182,7 @@ class _RegisterPageState extends State<RegisterPage> {
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                SizedBox(height: 5.0),
                 logoField,
-                SizedBox(height: 8.0),
                 nameField,
                 SizedBox(height: 8.0),
                 lastnameField,
@@ -198,15 +196,13 @@ class _RegisterPageState extends State<RegisterPage> {
                 countryField,
                 SizedBox(height: 8.0),
                 passwordField,
-                SizedBox(height: 8.0),
+                SizedBox(height: 40.0),
                 isLoading
                     ? Center(
                         child: CircularProgressIndicator(),
                       )
                     : registerButton,
                 SizedBox(height: 8.0),
-                SizedBox(height: 8.0),
-                goToLoginPageButton,
               ],
             ),
           ),

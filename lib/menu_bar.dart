@@ -1,7 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:o_jobs/appliedjobs_page.dart';
-import 'package:o_jobs/favorite_page.dart';
-import 'package:o_jobs/profile_page.dart';
 import 'package:o_jobs/globals.dart' as globals;
 
 class BaseAppBar extends StatelessWidget {
