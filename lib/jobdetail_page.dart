@@ -7,6 +7,7 @@ import 'package:o_jobs/globals.dart' as globals;
 import 'menu_bar.dart';
 
 enum CV { cv1, cv2 }
+CV groupcv = CV.cv1;
 
 class JobdetailPage extends StatefulWidget {
   final String id;
@@ -55,10 +56,11 @@ class _JobdetailState extends State<JobdetailPage> {
             ListTile(
               title: const Text('CV 1'),
               leading: Radio(
+                autofocus: true,
                 value: globals.currentUserInfo.cv1,
-                // groupValue: _character,
-                // onChanged: (SingingCharacter value) {
-                //   setState(() { _character = value; });
+                groupValue: groupcv,
+                // onChanged: (CV value) {
+                //   setState(() { groupcv = value; });
                 // },
               ),
             ),
@@ -66,9 +68,9 @@ class _JobdetailState extends State<JobdetailPage> {
               title: const Text('CV 2'),
               leading: Radio(
                 value: globals.currentUserInfo.cv2,
-                // groupValue: _character,
-                // onChanged: (SingingCharacter value) {
-                //   setState(() { _character = value; });
+                groupValue: groupcv,
+                // onChanged: (CV value) {
+                //   setState(() { groupcv = value; });
                 // },
               ),
             ),
@@ -78,41 +80,29 @@ class _JobdetailState extends State<JobdetailPage> {
           future: getJob(widget.id),
           builder: (context, snapshot) {
             if(snapshot.connectionState == ConnectionState.done){
-              return Container(
-                padding: EdgeInsets.only(top:21),
-                width: MediaQuery.of(context).size.width,
-                height: MediaQuery.of(context).size.height-200,
-                child: Row(
-                  children: <Widget>[
-                    Card(
-                      margin: EdgeInsets.all(12),
-                      elevation: 4,
-                      color: Color.fromRGBO(64, 75, 96, .9),
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16),
-                        child: Row(
-                          children: <Widget>[
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisSize: MainAxisSize.min,
-                              children: <Widget>[
-                                Text("Jumping", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-                                SizedBox(height: 4),
-                                Text("Activations 9", style: TextStyle(color: Colors.white70)),
-                                Text("03-08-19", style: TextStyle(color: Colors.white70)),
-                                Text(snapshot.data.name, style: TextStyle(fontSize: 20,backgroundColor: Colors.grey)),
-                                Text(snapshot.data.desc, style: TextStyle(fontSize: 12)),
-                              ],
-                            ),
-                            Spacer(),
-                            CircleAvatar(backgroundColor: Colors.white),
-                          ],
+              return Column(
+                children: [
+                  Card(
+                    margin: EdgeInsets.only(top:32),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: <Widget>[
+                        ListTile(
+                          leading: Icon(Icons.album, size: 50),
+                          title: Text(snapshot.data.name),
+                          subtitle: Text(snapshot.data.desc),
                         ),
-                      ),
-                    ),
-                    cvchoiceRadio,
-                  ],
-                )
+                        // ListView(
+                        //     children: ListTile.divideTiles(
+                        //       tiles: snapshot.data.skillList.map((data) => Text(data))
+                        //   ),
+                        // ),
+                    ],
+                  ),
+                ),
+                SizedBox(height: 15),
+                cvchoiceRadio,
+                ]
               );
             }
             else {
