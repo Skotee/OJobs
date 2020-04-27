@@ -45,7 +45,7 @@ class _JobdetailState extends State<JobdetailPage> {
     );
 
     return Scaffold(
-      drawer: BaseAppBar(),
+      drawer: baseAppBar(context),
       body: _buildBody(context),
       floatingActionButton: applyButton,
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,

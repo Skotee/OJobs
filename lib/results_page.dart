@@ -10,8 +10,9 @@ class ResultsPage extends StatefulWidget {
   final double lat;
   final double long;
   final String term;
+  final double range;
   ResultsPage(
-      {Key key, @required this.term, @required this.lat, @required this.long})
+      {Key key, @required this.term, @required this.lat, @required this.long, @required this.range})
       : super(key: key);
 
   @override
@@ -33,7 +34,7 @@ class _ResultsPageState extends State<ResultsPage> {
           context,
           MaterialPageRoute(
             builder: (context) =>
-                MapPage(term: widget.term, lat: widget.lat, long: widget.long),
+                MapPage(term: widget.term, lat: widget.lat, long: widget.long,range:widget.range),
           ),
         ),
         child: Text("Go to map",
@@ -44,7 +45,7 @@ class _ResultsPageState extends State<ResultsPage> {
     );
 
     return Scaffold(
-      drawer: BaseAppBar(),
+      drawer: baseAppBar(context),
       appBar: AppBar(
         centerTitle: true,
         title: RichText(
@@ -62,7 +63,7 @@ class _ResultsPageState extends State<ResultsPage> {
 
   Widget _buildBody(BuildContext context) {
     return StreamBuilder<List<DocumentSnapshot>>(
-      stream: queryGeoKeyJob(widget.term, widget.lat, widget.long),
+      stream: queryGeoKeyJob(widget.term, widget.lat, widget.long,widget.range),
       builder: (context, snapshot) {
         if (!snapshot.hasData) {
           return Center(

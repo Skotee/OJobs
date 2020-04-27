@@ -25,27 +25,42 @@ class MyApp extends StatelessWidget {
       onGenerateRoute: (settings) {
         switch (settings.name) {
           case '/login':
-            return MaterialPageRoute(builder: (context) => LoginPage());
+            return MaterialPageRoute(
+                builder: (context) => LoginPage(),
+                settings: RouteSettings(name: '/login'));
             break;
           case '/register':
-            return MaterialPageRoute(builder: (context) => RegisterPage());
+            return MaterialPageRoute(
+                builder: (context) => RegisterPage(),
+                settings: RouteSettings(name: '/register'));
             break;
           case '/search':
-            return MaterialPageRoute(builder: (context) => SearchPage());
+            return MaterialPageRoute(
+                builder: (context) => SearchPage(),
+                settings: RouteSettings(name: '/search'));
             break;
           case '/favorite':
-            return MaterialPageRoute(builder: (context) => FavoritePage());
+            return MaterialPageRoute(
+                builder: (context) => FavoritePage(),
+                settings: RouteSettings(name: '/favorite'));
             break;
           case '/done':
-            return MaterialPageRoute(builder: (context) => DonePage());
+            return MaterialPageRoute(
+                builder: (context) => DonePage(),
+                settings: RouteSettings(name: '/done'));
             break;
           case '/appliedjobs':
-            return MaterialPageRoute(builder: (context) => AppliedJobsPage());
+            return MaterialPageRoute(
+                builder: (context) => AppliedJobsPage(),
+                settings: RouteSettings(name: '/appliedjobs'));
             break;
           case '/profile':
-            return MaterialPageRoute(builder: (context) => ProfilePage());
+            return MaterialPageRoute(
+                builder: (context) => ProfilePage(),
+                settings: RouteSettings(name: '/profile'));
             break;
           default:
+            return null;
         }
       },
       routes: {
@@ -71,15 +86,6 @@ class MyApp extends StatelessWidget {
             },
           );
         },
-        /*'/login': (context) => LoginPage(),
-        '/register': (context) => RegisterPage(),
-        '/search': (context) => SearchPage(),
-        '/result': (context) => ResultsPage(lat: null, long: null, term: null),
-        '/map': (context) => MapPage(lat: null, long: null, term: null),
-        '/favorite': (context) => FavoritePage(),
-        '/done': (context) => DonePage(),
-        '/jobdetail': (context) => JobdetailPage(id: null),
-*/
       },
     );
   }

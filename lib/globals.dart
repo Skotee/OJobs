@@ -8,7 +8,7 @@ import 'db.dart';
 final FirebaseAuth auth = FirebaseAuth.instance;
 bool isLogin = false;
 FirebaseUser currentUser;
-User currentUserInfo;
+User currentUserInfo = User();
 
 void update() async {
   currentUserInfo = await getUser(currentUser.uid);

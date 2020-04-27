@@ -9,7 +9,8 @@ class MapPage extends StatefulWidget {
   final double lat;
   final double long;
   final String term;
-  MapPage({@required this.term, @required this.lat, @required this.long});
+  final double range;
+  MapPage({@required this.term, @required this.lat, @required this.long, @required this.range});
   @override
   _MapPageState createState() => _MapPageState();
 }
@@ -22,7 +23,7 @@ class _MapPageState extends State<MapPage> {
   @override
   void initState() {
     super.initState();
-    stream = queryGeoKeyJob(widget.term, widget.lat, widget.long);
+    stream = queryGeoKeyJob(widget.term, widget.lat, widget.long,widget.range);
   }
 
   void _onMapCreated(GoogleMapController controller) {

@@ -15,7 +15,7 @@ class _AppliedJobsPageState extends State<AppliedJobsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawer: BaseAppBar(),
+      drawer: baseAppBar(context),
       appBar: AppBar(
         centerTitle: true,
         title: RichText(
@@ -31,6 +31,9 @@ class _AppliedJobsPageState extends State<AppliedJobsPage> {
   }
 
   Widget _buildBody(BuildContext context) {
+    if (globals.currentUserInfo.applied.isEmpty)
+      return Center(child: Text('Applied job list is empty',style: style));
+    else
     return StreamBuilder<QuerySnapshot>(
       stream: queryAppliedList(),
       builder: (context, snapshot) {
