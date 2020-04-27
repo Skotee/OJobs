@@ -1,7 +1,5 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:location/location.dart';
-import 'package:o_jobs/db.dart';
 
 import 'package:geolocator/geolocator.dart';
 import 'menu_bar.dart';
@@ -19,6 +17,7 @@ class _SearchPageState extends State<SearchPage> {
   final TextEditingController _whatjobController = TextEditingController();
   final TextEditingController _wherejobController = TextEditingController();
   bool isLoading = false;
+  double range = 10;
 
   @override
   Widget build(BuildContext context) {
@@ -80,7 +79,7 @@ class _SearchPageState extends State<SearchPage> {
                 color: Colors.white, fontWeight: FontWeight.bold)),
       ),
     );
-    final addButton = ClipOval(
+    /*final addButton = ClipOval(
       child: Material(
         color: Colors.blue, // button color
         child: InkWell(
@@ -91,15 +90,26 @@ class _SearchPageState extends State<SearchPage> {
           },
         ),
       ),
-    );
+    );*/
+    final slider = Slider(
+      label: range.floor().toString()+' km',
+      divisions: 50,
+      value: range,
+      min: 0,
+      max: 50,
+      onChanged: (double value) {
+        setState(() {
+          range = value;
+        });
+      });
     return Scaffold(
       key: _scaffoldKey,
-      drawer: BaseAppBar(),
+      drawer: baseAppBar(context),
       body: Form(
         key: _formKey,
+        child: Center(
         child: Container(
-          child: Padding(
-            padding: const EdgeInsets.all(36.0),
+          padding: const EdgeInsets.all(36.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.center,
@@ -117,7 +127,8 @@ class _SearchPageState extends State<SearchPage> {
                       )
                     : searchButton,
                 SizedBox(height: 50.0),
-                addButton
+                //addButton,
+                slider
               ],
             ),
           ),
@@ -156,7 +167,8 @@ class _SearchPageState extends State<SearchPage> {
         builder: (context) => ResultsPage(
             term: _whatjobController.text,
             lat: placemark[0].position.latitude,
-            long: placemark[0].position.longitude),
+            long: placemark[0].position.longitude,
+            range: range),
       ),
     );
   }

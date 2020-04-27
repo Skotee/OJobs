@@ -15,7 +15,7 @@ class _FavoritePageState extends State<FavoritePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawer: BaseAppBar(),
+      drawer: baseAppBar(context),
       appBar: AppBar(
         centerTitle: true,
         title: RichText(
@@ -30,18 +30,21 @@ class _FavoritePageState extends State<FavoritePage> {
   }
 
   Widget _buildBody(BuildContext context) {
-    return StreamBuilder<QuerySnapshot>(
-      stream: queryFavoriteList(),
-      builder: (context, snapshot) {
-        print(snapshot.data);
-        if (!snapshot.hasData) {
-          return Center(
-            child: CircularProgressIndicator(),
-          );
-        }
-        return _buildList(context, snapshot.data.documents);
-      },
-    );
+    if (globals.currentUserInfo.favorite.isEmpty)
+      return Center(child: Text('Favorite job list is empty', style: style));
+    else
+      return StreamBuilder<QuerySnapshot>(
+        stream: queryFavoriteList(),
+        builder: (context, snapshot) {
+          print(snapshot.data);
+          if (!snapshot.hasData) {
+            return Center(
+              child: CircularProgressIndicator(),
+            );
+          }
+          return _buildList(context, snapshot.data.documents);
+        },
+      );
   }
 
   Widget _buildList(BuildContext context, List<DocumentSnapshot> snapshot) {

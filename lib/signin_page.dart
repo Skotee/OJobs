@@ -75,44 +75,38 @@ class _LoginPageState extends State<LoginPage> {
                 color: Colors.white, fontWeight: FontWeight.bold)),
       ),
     );
-    final goToRegisterPageButton = Material(
-      elevation: 5.0,
-      borderRadius: BorderRadius.circular(30.0),
-      color: Theme.of(context).buttonColor,
-      child: MaterialButton(
-        minWidth: MediaQuery.of(context).size.width,
+    final goToRegisterPageButton = FlatButton(
         padding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
         onPressed: () => Navigator.pushNamed(context, '/register'),
-        child: Text("Register",
-            textAlign: TextAlign.center,
-            style: style.copyWith(
-                color: Colors.white, fontWeight: FontWeight.bold)),
-      ),
-    );
+        textColor: Theme.of(context).buttonTheme.colorScheme.primary,
+        child: Text(
+          "Register",
+          textAlign: TextAlign.center,
+          style: style,
+        ));
     return Scaffold(
       key: _scaffoldKey,
       body: Form(
         key: _formKey,
-        child: Container(
-          child: Padding(
+        child: Center(
+          child: Container(
             padding: const EdgeInsets.all(36.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                SizedBox(height: 155.0),
                 logoField,
-                SizedBox(height: 45.0),
-                emailField,
-                SizedBox(height: 25.0),
-                passwordField,
                 SizedBox(height: 35.0),
+                emailField,
+                SizedBox(height: 16.0),
+                passwordField,
+                SizedBox(height: 25.0),
                 isLoading
                     ? Center(
                         child: CircularProgressIndicator(),
                       )
                     : loginButton,
-                SizedBox(height: 15.0),
+                SizedBox(height: 16.0),
                 goToRegisterPageButton,
               ],
             ),

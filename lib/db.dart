@@ -23,17 +23,19 @@ Future<User> getUser(String id) {
 }
 
 class User {
-  String name;
-  String lastname;
-  String email;
-  String mobile;
-  String adress;
-  String country;
-  String cv1;
-  String cv2;
-  String pic;
+  String name = '';
+  String lastname = '';
+  String email = '';
+  String mobile = '';
+  String adress = '';
+  String country = '';
+  String cv1 = '';
+  String cv2 = '';
+  String pic = '';
   List<dynamic> favorite;
   List<dynamic> applied;
+
+  User();
 
   User.fromSnapshot(DocumentSnapshot snapshot)
       : name = snapshot['name'],
@@ -156,7 +158,7 @@ Stream<QuerySnapshot> queryAppliedList() {
 }
 
 Stream<List<DocumentSnapshot>> queryGeoKeyJob(
-    String name, double lat, double long) {
+    String name, double lat, double long,double range) {
   var terms = name.toUpperCase().split(" ");
   GeoFirePoint center = Geoflutterfire().point(latitude: lat, longitude: long);
   var collectionReference = Firestore.instance
@@ -164,7 +166,7 @@ Stream<List<DocumentSnapshot>> queryGeoKeyJob(
       .where('key_term', arrayContainsAny: terms);
   var searchRef = Geoflutterfire()
       .collection(collectionRef: collectionReference)
-      .within(center: center, radius: 20, field: 'position');
+      .within(center: center, radius: range, field: 'position');
   return searchRef;
   //return searchRef.map((list) => list.map((doc) => Job.fromSnapshot(doc)).toList());
 }

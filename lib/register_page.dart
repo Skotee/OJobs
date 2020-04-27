@@ -157,55 +157,37 @@ class _RegisterPageState extends State<RegisterPage> {
                 color: Colors.white, fontWeight: FontWeight.bold)),
       ),
     );
-
-    final goToLoginPageButton = Material(
-      elevation: 5.0,
-      borderRadius: BorderRadius.circular(30.0),
-      color: Theme.of(context).buttonColor,
-      child: MaterialButton(
-        minWidth: MediaQuery.of(context).size.width,
-        padding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
-        onPressed: () => Navigator.pop(context),
-        child: Text("Login",
-            textAlign: TextAlign.center,
-            style: style.copyWith(
-                color: Colors.white, fontWeight: FontWeight.bold)),
-      ),
-    );
     return Scaffold(
+      resizeToAvoidBottomInset: true,
       body: Form(
         key: _formKey,
-        child: Container(
-          child: Padding(
-            padding: const EdgeInsets.all(36.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                logoField,
-                nameField,
-                SizedBox(height: 8.0),
-                lastnameField,
-                SizedBox(height: 8.0),
-                emailField,
-                SizedBox(height: 8.0),
-                mobileField,
-                SizedBox(height: 8.0),
-                addressField,
-                SizedBox(height: 8.0),
-                countryField,
-                SizedBox(height: 8.0),
-                passwordField,
-                SizedBox(height: 40.0),
-                isLoading
-                    ? Center(
-                        child: CircularProgressIndicator(),
-                      )
-                    : registerButton,
-                SizedBox(height: 8.0),
-              ],
-            ),
-          ),
+        child: ListView(
+          physics: ClampingScrollPhysics(),
+          padding: EdgeInsets.fromLTRB(20.0, 40.0, 20.0, 15.0),
+          children: <Widget>[
+            Center(child: logoField),
+            SizedBox(height: 16.0),
+            nameField,
+            SizedBox(height: 8.0),
+            lastnameField,
+            SizedBox(height: 8.0),
+            emailField,
+            SizedBox(height: 8.0),
+            mobileField,
+            SizedBox(height: 8.0),
+            addressField,
+            SizedBox(height: 8.0),
+            countryField,
+            SizedBox(height: 8.0),
+            passwordField,
+            SizedBox(height: 40.0),
+            isLoading
+                ? Center(
+                    child: CircularProgressIndicator(),
+                  )
+                : registerButton,
+            SizedBox(height: 8.0),
+          ],
         ),
       ),
     );
@@ -231,6 +213,7 @@ class _RegisterPageState extends State<RegisterPage> {
         .user;
     if (user != null) {
       Firestore.instance.collection('USER').document(user.uid).setData({
+        'admin': false,
         'name': _nameController.text,
         'lastname': _lastnameController.text,
         'email': _emailController.text,
@@ -244,8 +227,6 @@ class _RegisterPageState extends State<RegisterPage> {
         'favorite': List<String>(),
         'applied': List<String>()
       });
-      Scaffold.of(context)
-          .showSnackBar(SnackBar(content: Text('Successfully registered')));
       Navigator.pop(context);
     } else {
       Scaffold.of(context)

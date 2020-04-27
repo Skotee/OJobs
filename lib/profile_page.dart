@@ -18,7 +18,7 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawer: BaseAppBar(),
+      drawer: baseAppBar(context),
       body: _buildBody(context),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
