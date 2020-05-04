@@ -27,30 +27,30 @@ class _ProfilePageState extends State<ProfilePage> {
   Widget _buildBody(BuildContext context) {
     final emailField = RichText(
         text: TextSpan(children: <TextSpan>[
-      TextSpan(text: 'Email: ', style: TextStyle(fontSize: 20)),
+      TextSpan(text: 'Email: '+ '\n', style: TextStyle(fontSize: 20)),
       TextSpan(
-          text: globals.currentUserInfo.email, style: TextStyle(fontSize: 20)),
+          text: globals.currentUserInfo.email, style: TextStyle(fontSize: 20, fontStyle: FontStyle.italic)),
     ]));
     final phoneField = RichText(
         text: TextSpan(children: <TextSpan>[
-      TextSpan(text: 'Phone number: ', style: TextStyle(fontSize: 20)),
+      TextSpan(text: 'Phone number: ' + '\n', style: TextStyle(fontSize: 20)),
       TextSpan(
-          text: globals.currentUserInfo.mobile, style: TextStyle(fontSize: 20)),
+          text: globals.currentUserInfo.mobile, style: TextStyle(fontSize: 20, fontStyle: FontStyle.italic)),
     ]));
     final addressField = RichText(
         maxLines: 3,
         text: TextSpan(children: <TextSpan>[
-          TextSpan(text: 'Address: ', style: TextStyle(fontSize: 20)),
+          TextSpan(text: 'Address: '+ '\n', style: TextStyle(fontSize: 20)),
           TextSpan(
               text: globals.currentUserInfo.adress,
-              style: TextStyle(fontSize: 20)),
+              style: TextStyle(fontSize: 20, fontStyle: FontStyle.italic)),
         ]));
     final countryField = RichText(
         text: TextSpan(children: <TextSpan>[
-      TextSpan(text: 'Country: ', style: TextStyle(fontSize: 20)),
+      TextSpan(text: 'Country: '+ '\n', style: TextStyle(fontSize: 20, fontStyle: FontStyle.italic)),
       TextSpan(
           text: globals.currentUserInfo.country,
-          style: TextStyle(fontSize: 20)),
+          style: TextStyle(fontSize: 20, fontStyle: FontStyle.italic)),
     ]));
     return Column(
       mainAxisSize: MainAxisSize.min,

@@ -5,6 +5,7 @@ import './map_page.dart';
 import 'globals.dart' as globals;
 import 'jobdetail_page.dart';
 import 'menu_bar.dart';
+import 'package:geocoder/geocoder.dart';
 
 class ResultsPage extends StatefulWidget {
   final double lat;
@@ -17,9 +18,19 @@ class ResultsPage extends StatefulWidget {
 
   @override
   _ResultsPageState createState() => _ResultsPageState();
+
+
 }
 
 class _ResultsPageState extends State<ResultsPage> {
+
+  Future<String> hehe(double lat, double long) async {
+    final coordinates = new Coordinates(lat, long);
+    var addresses = await Geocoder.local.findAddressesFromCoordinates(coordinates);
+    var first = addresses.first;
+    return first.locality + ", " + first.countryName;
+  }
+
   TextStyle style = TextStyle(fontFamily: 'Roboto', fontSize: 20.0);
   @override
   Widget build(BuildContext context) {
@@ -62,6 +73,7 @@ class _ResultsPageState extends State<ResultsPage> {
   }
 
   Widget _buildBody(BuildContext context) {
+
     return StreamBuilder<List<DocumentSnapshot>>(
       stream: queryGeoKeyJob(widget.term, widget.lat, widget.long,widget.range),
       builder: (context, snapshot) {
@@ -98,8 +110,36 @@ class _ResultsPageState extends State<ResultsPage> {
               color: Colors.grey,
             )
           : null,
-      title: Text(job.name),
-      subtitle: Text(job.desc),
+      title: RichText(
+          text: TextSpan(
+            text: job.name + '\n',
+            style: TextStyle(
+              // decoration: TextDecoration.underline,
+              fontSize: 20
+            ),
+          ),
+        ),
+      subtitle: FutureBuilder(future:hehe(job.position.latitude,job.position.longitude), builder: (context,snapshot){
+        if (snapshot.connectionState == ConnectionState.done) {
+          return RichText(
+          text: TextSpan(
+              children: <TextSpan>[
+                TextSpan(
+                  text: job.desc + '\n\n',
+                  style: TextStyle(
+                    fontStyle: FontStyle.italic,
+                    decorationStyle: TextDecorationStyle.wavy,
+                  ),
+                ),
+                TextSpan(
+                  text: snapshot.data,
+                ),
+              ],
+            ),
+        );
+        }else
+          return Text('');
+      }),
       trailing: fav
           ? IconButton(
               icon: Icon(Icons.favorite),
